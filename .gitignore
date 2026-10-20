@@ -1,0 +1,9 @@
+node_modules/
+.expo/
+dist/
+test-results/
+*.log
+ios/
+android/
+*.tsbuildinfo
+.DS_Store

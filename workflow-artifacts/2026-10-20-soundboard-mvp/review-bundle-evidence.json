@@ -1,0 +1,232 @@
+{
+  "checkedAt": "2026-10-20T16:04:44.904Z",
+  "result": "All embedded application source contents match current files; concrete advisory modules absent; Metro CLI runtime shim present",
+  "results": [
+    {
+      "platform": "web",
+      "sourceCount": 233,
+      "applicationContentMatches": [
+        {
+          "path": "index.ts",
+          "matches": true
+        },
+        {
+          "path": "App.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/platform/storage.web.ts",
+          "matches": true
+        },
+        {
+          "path": "src/domain/validation.ts",
+          "matches": true
+        },
+        {
+          "path": "src/domain/model.ts",
+          "matches": true
+        },
+        {
+          "path": "src/domain/board.ts",
+          "matches": true
+        },
+        {
+          "path": "src/domain/errors.ts",
+          "matches": true
+        },
+        {
+          "path": "src/platform/state-record.ts",
+          "matches": true
+        },
+        {
+          "path": "src/platform/audio.web.ts",
+          "matches": true
+        },
+        {
+          "path": "src/domain/trim.ts",
+          "matches": true
+        },
+        {
+          "path": "src/platform/picker.web.ts",
+          "matches": true
+        },
+        {
+          "path": "src/services/library.ts",
+          "matches": true
+        },
+        {
+          "path": "src/services/playback.ts",
+          "matches": true
+        },
+        {
+          "path": "src/services/board-session.ts",
+          "matches": true
+        },
+        {
+          "path": "src/platform/interruption.web.ts",
+          "matches": true
+        },
+        {
+          "path": "src/ui/LibraryPanel.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/Action.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/theme.ts",
+          "matches": true
+        },
+        {
+          "path": "src/ui/SoundEditor.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/EditorDialog.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/BoardScreen.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/BoardEditor.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/ButtonEditor.tsx",
+          "matches": true
+        }
+      ],
+      "affected": [],
+      "cliRuntime": [
+        "/node_modules/@expo/cli/build/metro-require/require.js"
+      ],
+      "bundles": [
+        {
+          "file": "dist/web/_expo/static/js/web/index-cc1a9f4e523922f4b55583ccdcfb544f.js",
+          "bytes": 468871,
+          "sha256": "60fd8c6567ad8d164ea67bcf0ab4ab40733a026daab67fed4e38bce6f51540e3"
+        }
+      ]
+    },
+    {
+      "platform": "ios",
+      "sourceCount": 707,
+      "applicationContentMatches": [
+        {
+          "path": "index.ts",
+          "matches": true
+        },
+        {
+          "path": "App.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/platform/storage.native.ts",
+          "matches": true
+        },
+        {
+          "path": "src/domain/validation.ts",
+          "matches": true
+        },
+        {
+          "path": "src/domain/model.ts",
+          "matches": true
+        },
+        {
+          "path": "src/domain/board.ts",
+          "matches": true
+        },
+        {
+          "path": "src/domain/errors.ts",
+          "matches": true
+        },
+        {
+          "path": "src/platform/state-record.ts",
+          "matches": true
+        },
+        {
+          "path": "src/platform/native-state.ts",
+          "matches": true
+        },
+        {
+          "path": "src/platform/audio.native.ts",
+          "matches": true
+        },
+        {
+          "path": "src/platform/native-playback.ts",
+          "matches": true
+        },
+        {
+          "path": "src/domain/trim.ts",
+          "matches": true
+        },
+        {
+          "path": "src/platform/picker.native.ts",
+          "matches": true
+        },
+        {
+          "path": "src/services/library.ts",
+          "matches": true
+        },
+        {
+          "path": "src/services/playback.ts",
+          "matches": true
+        },
+        {
+          "path": "src/services/board-session.ts",
+          "matches": true
+        },
+        {
+          "path": "src/platform/interruption.native.ts",
+          "matches": true
+        },
+        {
+          "path": "src/ui/LibraryPanel.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/Action.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/theme.ts",
+          "matches": true
+        },
+        {
+          "path": "src/ui/SoundEditor.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/EditorDialog.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/BoardScreen.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/BoardEditor.tsx",
+          "matches": true
+        },
+        {
+          "path": "src/ui/ButtonEditor.tsx",
+          "matches": true
+        }
+      ],
+      "affected": [],
+      "cliRuntime": [
+        "/node_modules/@expo/cli/build/metro-require/require.js"
+      ],
+      "bundles": [
+        {
+          "file": "dist/ios/_expo/static/js/ios/index-fbb1570070aca540068cd461eb8a605c.hbc",
+          "bytes": 1501256,
+          "sha256": "a1c0f3fe371c8058a5cf064059bc93dc0f95e42317f8e57c3eba8e4b2fc4565a"
+        }
+      ]
+    }
+  ]
+}

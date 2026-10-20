@@ -1,0 +1,22 @@
+// Original synthetic tones; no third-party recordings.
+import fs from 'node:fs';
+import vm from 'node:vm';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const scope = {}; vm.createContext(scope);
+vm.runInContext(fs.readFileSync(require.resolve('lamejs/lame.all.js'), 'utf8'), scope);
+fs.mkdirSync('tests/fixtures', { recursive: true });
+const sampleRate = 44100, length = sampleRate * 2;
+const samples = new Int16Array(length);
+for (let i = 0; i < length; i++) samples[i] = Math.round(6000 * Math.sin(2 * Math.PI * (i < sampleRate ? 440 : 880) * i / sampleRate));
+const wav = Buffer.alloc(44 + length * 2);
+wav.write('RIFF', 0); wav.writeUInt32LE(wav.length - 8, 4); wav.write('WAVEfmt ', 8); wav.writeUInt32LE(16, 16);
+wav.writeUInt16LE(1, 20); wav.writeUInt16LE(1, 22); wav.writeUInt32LE(sampleRate, 24); wav.writeUInt32LE(sampleRate * 2, 28);
+wav.writeUInt16LE(2, 32); wav.writeUInt16LE(16, 34); wav.write('data', 36); wav.writeUInt32LE(length * 2, 40);
+for (let i = 0; i < length; i++) wav.writeInt16LE(samples[i], 44 + i * 2);
+fs.writeFileSync('tests/fixtures/tone.wav', wav);
+const encoder = new scope.lamejs.Mp3Encoder(1, sampleRate, 128), chunks = [];
+for (let i = 0; i < samples.length; i += 1152) chunks.push(Buffer.from(encoder.encodeBuffer(samples.subarray(i, i + 1152))));
+chunks.push(Buffer.from(encoder.flush())); fs.writeFileSync('tests/fixtures/tone.mp3', Buffer.concat(chunks));
+fs.writeFileSync('tests/fixtures/broken.wav', 'Not an audio file');
+console.log('Generated original 2-second 440/880 Hz PCM-WAV and MP3 fixtures.');

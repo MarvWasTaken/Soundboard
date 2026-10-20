@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-10-20T15:59:46.351Z",
+  "entries": 63,
+  "computedDigest": "aa68d0d52eb578780c2dbf5d111497348050cb5c2bc4894a655472c9d723e2d3",
+  "expectedDigest": "aa68d0d52eb578780c2dbf5d111497348050cb5c2bc4894a655472c9d723e2d3",
+  "matchingDigest": true,
+  "mismatch": [],
+  "roots": [
+    ".expo",
+    ".gitignore",
+    "App.tsx",
+    "README.md",
+    "app.json",
+    "dist",
+    "index.ts",
+    "node_modules",
+    "package-lock.json",
+    "package.json",
+    "scripts",
+    "src",
+    "test-results",
+    "tests",
+    "tsconfig.json",
+    "tsconfig.web.json",
+    "workflow-artifacts"
+  ]
+}

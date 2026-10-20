@@ -1,0 +1,1 @@
+{"expo":{"name":"Soundboard","slug":"local-soundboard","version":"1.0.0","orientation":"default","userInterfaceStyle":"light","ios":{"supportsTablet":true,"bundleIdentifier":"app.localsoundboard.mobile"},"web":{"bundler":"metro"},"plugins":["expo-document-picker","expo-sqlite"]}}

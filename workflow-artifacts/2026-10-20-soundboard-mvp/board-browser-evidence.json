@@ -1,0 +1,237 @@
+{
+  "browser": "155.0.8059.85",
+  "result": "PASS: 12 real buttons, 1024/390px, create/edit/delete/assignment/layout/trim/reload, collision preservation, keyboard focus/Enter/Space/Tab, touch, board switch stop, last elements and sounds retained",
+  "persisted": {
+    "version": 1,
+    "sounds": [
+      {
+        "id": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+        "name": "tone.wav",
+        "assetKey": "c4452759-a11f-4b01-b81f-ce03c2ebfb97.wav",
+        "durationSeconds": 2,
+        "trimStartSeconds": 0.25,
+        "trimEndSeconds": 1.25
+      },
+      {
+        "id": "0ca1526b-f3eb-4f2c-99f9-cfa1b8252a28",
+        "name": "tone.mp3",
+        "assetKey": "0ca1526b-f3eb-4f2c-99f9-cfa1b8252a28.mp3",
+        "durationSeconds": 2.0375510204081633,
+        "trimStartSeconds": 0,
+        "trimEndSeconds": 2.0375510204081633
+      }
+    ],
+    "boards": [
+      {
+        "id": "a38aa134-1887-4e37-b32b-3d1462b773c3",
+        "name": "Bühne",
+        "buttons": [
+          {
+            "id": "a6cea198-7bbc-4483-a419-41ef64ea5470",
+            "label": "Applaus",
+            "soundId": "0ca1526b-f3eb-4f2c-99f9-cfa1b8252a28",
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "e4de4bed-aac1-416e-91f5-8eec313807ee",
+            "label": "Pad 02",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 1,
+            "y": 0,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "db175b93-bcfe-4669-b5aa-28be6d3ee8b4",
+            "label": "Pad 03",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 0,
+            "y": 1,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "dd3bcb98-a2ed-47b4-98e1-a3b1e65a2348",
+            "label": "Pad 04",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 1,
+            "y": 1,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "7728cf89-78c2-4e1d-ad12-e7a26317af72",
+            "label": "Pad 05",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "746dd29d-375e-487e-b47b-f830cd804b8f",
+            "label": "Pad 06",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 1,
+            "y": 2,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "8758a547-def4-4876-a034-886c030a7a27",
+            "label": "Pad 07",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 0,
+            "y": 3,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "c1686757-39e5-4d05-8ca1-21c09c8e6569",
+            "label": "Pad 08",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 1,
+            "y": 3,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "c8c9194b-8a3a-4842-8b49-92813f90c345",
+            "label": "Pad 09",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 0,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "7d673429-5f3b-48ec-9f7d-2e870f191251",
+            "label": "Pad 10",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 1,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "422a28ef-2c4e-4e21-be96-d58c90f80441",
+            "label": "Pad 11",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 0,
+            "y": 5,
+            "width": 1,
+            "height": 1
+          },
+          {
+            "id": "927e6e4c-12c7-4eca-be56-83041e500b3c",
+            "label": "Pad 12",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 0,
+            "y": 6,
+            "width": 2,
+            "height": 2
+          }
+        ]
+      },
+      {
+        "id": "d70b142e-76a9-49a0-9c56-53e2676621b3",
+        "name": "Zweite Bühne",
+        "buttons": [
+          {
+            "id": "8027a915-5654-45bd-a7df-38655191a628",
+            "label": "Zugabe",
+            "soundId": "c4452759-a11f-4b01-b81f-ce03c2ebfb97",
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 1
+          }
+        ]
+      }
+    ]
+  },
+  "mobileBoxes": [
+    {
+      "x": 35,
+      "y": 488,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 201,
+      "y": 488,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 35,
+      "y": 624,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 201,
+      "y": 624,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 35,
+      "y": 760,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 201,
+      "y": 760,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 35,
+      "y": 896,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 201,
+      "y": 896,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 35,
+      "y": 1032,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 201,
+      "y": 1032,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 35,
+      "y": 1168,
+      "width": 154,
+      "height": 124
+    },
+    {
+      "x": 35,
+      "y": 1304,
+      "width": 320,
+      "height": 260
+    }
+  ],
+  "keyboardFocusColor": "rgb(34, 40, 38)",
+  "tabTarget": {
+    "role": "button",
+    "label": "Board Bühne, 1"
+  },
+  "finalBoardCount": 0,
+  "finalSoundCount": 2
+}

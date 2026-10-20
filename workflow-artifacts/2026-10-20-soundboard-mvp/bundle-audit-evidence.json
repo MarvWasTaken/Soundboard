@@ -1,0 +1,45 @@
+{
+  "result": "PASS: expected platform adapters and no affected tooling modules in actual production sourcemap sources",
+  "findings": [
+    {
+      "platform": "web",
+      "maps": [
+        "dist/web/_expo/static/js/web/index-cc1a9f4e523922f4b55583ccdcfb544f.js.map"
+      ],
+      "sourceCount": 233,
+      "affectedPackages": [],
+      "cliRuntimeShims": [
+        "/node_modules/@expo/cli/build/metro-require/require.js"
+      ],
+      "applicationSources": [
+        "/App.tsx",
+        "/src/platform/storage.web.ts",
+        "/src/platform/state-record.ts",
+        "/src/platform/audio.web.ts",
+        "/src/platform/picker.web.ts",
+        "/src/platform/interruption.web.ts"
+      ]
+    },
+    {
+      "platform": "ios",
+      "maps": [
+        "dist/ios/_expo/static/js/ios/index-fbb1570070aca540068cd461eb8a605c.hbc.map"
+      ],
+      "sourceCount": 707,
+      "affectedPackages": [],
+      "cliRuntimeShims": [
+        "/node_modules/@expo/cli/build/metro-require/require.js"
+      ],
+      "applicationSources": [
+        "/App.tsx",
+        "/src/platform/storage.native.ts",
+        "/src/platform/state-record.ts",
+        "/src/platform/native-state.ts",
+        "/src/platform/audio.native.ts",
+        "/src/platform/native-playback.ts",
+        "/src/platform/picker.native.ts",
+        "/src/platform/interruption.native.ts"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "browser": "155.0.8059.85",
+  "result": "PASS: stale writes rejected; all four dialogs lock/reload/discard; first writer and original assets retained; import rollback; failed/successful reload; concurrent first writes and updates admit one winner",
+  "originalHashes": {
+    "1fa08018-f7df-46a6-b512-98df038154fe.wav": "d0a471543369ded09667fb79ddc2ff354ce5aecc0d99b5e9653de6f1e8d679fb",
+    "e5a21de7-d761-4164-9523-5f41f5af24be.mp3": "d9868285a0f7e13773479fa02165de678338d533b9790b4b3a158bd7e3f9a27e"
+  },
+  "firstCommitted": "full snapshot preserved",
+  "firstRace": {
+    "version": 1,
+    "sounds": [],
+    "boards": [
+      {
+        "id": "0c8dfac5-fdf8-4b52-8df0-00cb51f5a6b1",
+        "name": "First C",
+        "buttons": []
+      }
+    ]
+  },
+  "updateRace": {
+    "version": 1,
+    "sounds": [],
+    "boards": [
+      {
+        "id": "0c8dfac5-fdf8-4b52-8df0-00cb51f5a6b1",
+        "name": "Update D",
+        "buttons": []
+      }
+    ]
+  }
+}

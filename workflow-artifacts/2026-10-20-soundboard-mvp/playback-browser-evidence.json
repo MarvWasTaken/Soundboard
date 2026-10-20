@@ -1,0 +1,130 @@
+{
+  "browser": "155.0.8059.85",
+  "preview": {
+    "starts": [
+      {
+        "id": 1,
+        "at": 0.18575963718820862,
+        "offset": 1.1,
+        "duration": 0.5999999999999999,
+        "maxRms": 0.129664449803929,
+        "frequency": 877.47802734375
+      }
+    ],
+    "ends": [
+      {
+        "id": 1,
+        "at": 0.7836734693877551
+      }
+    ],
+    "stops": [
+      {
+        "id": 1,
+        "at": 0.7894784580498866
+      }
+    ],
+    "unlocks": [
+      {
+        "gesture": true
+      }
+    ],
+    "maxActive": 1
+  },
+  "previewElapsedAudioSeconds": 0.5979138321995464,
+  "restartStopInterrupt": {
+    "starts": [
+      {
+        "id": 1,
+        "at": 0.011609977324263039,
+        "offset": 1.1,
+        "duration": 0.5999999999999999,
+        "maxRms": 0.1295848115341689,
+        "frequency": 877.47802734375
+      },
+      {
+        "id": 2,
+        "at": 0.08126984126984127,
+        "offset": 1.1,
+        "duration": 0.5999999999999999,
+        "maxRms": 0.12109598632348971,
+        "frequency": 877.47802734375
+      },
+      {
+        "id": 3,
+        "at": 0.1799546485260771,
+        "offset": 1.1,
+        "duration": 0.5999999999999999,
+        "maxRms": 0,
+        "frequency": 877.47802734375
+      },
+      {
+        "id": 4,
+        "at": 0.2147845804988662,
+        "offset": 1.1,
+        "duration": 0.5999999999999999,
+        "maxRms": 0.12965981102533622,
+        "frequency": 877.47802734375
+      }
+    ],
+    "ends": [
+      {
+        "id": 1,
+        "at": 0.07546485260770976
+      },
+      {
+        "id": 2,
+        "at": 0.14512471655328799
+      },
+      {
+        "id": 3,
+        "at": 0.2089795918367347
+      },
+      {
+        "id": 4,
+        "at": 0.8185034013605442
+      }
+    ],
+    "stops": [
+      {
+        "id": 1,
+        "at": 0.06385487528344672
+      },
+      {
+        "id": 2,
+        "at": 0.12770975056689343
+      },
+      {
+        "id": 3,
+        "at": 0.19736961451247165
+      },
+      {
+        "id": 4,
+        "at": 0.8185034013605442
+      }
+    ],
+    "unlocks": [
+      {
+        "gesture": true
+      },
+      {
+        "gesture": true
+      },
+      {
+        "gesture": true
+      },
+      {
+        "gesture": true
+      }
+    ],
+    "maxActive": 1
+  },
+  "mp3Playback": {
+    "id": 5,
+    "at": 0.893968253968254,
+    "offset": 0,
+    "duration": 2.0375510204081633,
+    "maxRms": 0.12319796411565569,
+    "frequency": 759.04541015625
+  },
+  "result": "PASS: real WAV/MP3 WebAudio signals, 880 Hz trimmed segment, engine endpoint, unchanged bytes, save/cancel/reload, restart/stop/context interruption, decoder error and recovery"
+}

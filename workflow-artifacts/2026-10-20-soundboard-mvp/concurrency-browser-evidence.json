@@ -1,0 +1,68 @@
+{
+  "browser": "155.0.8059.85",
+  "result": "PASS: stale writes rejected; all four dialogs lock/reload/discard; first writer and original assets retained; import rollback; failed/successful reload; concurrent first writes and updates admit one winner",
+  "originalHashes": {
+    "4fd9a3f7-70a7-4caf-af7c-9290075d9eba.mp3": "d9868285a0f7e13773479fa02165de678338d533b9790b4b3a158bd7e3f9a27e",
+    "8cbb26de-2c39-402c-a1f0-762cdf2e67a5.wav": "d0a471543369ded09667fb79ddc2ff354ce5aecc0d99b5e9653de6f1e8d679fb"
+  },
+  "firstCommitted": {
+    "version": 1,
+    "sounds": [
+      {
+        "id": "8cbb26de-2c39-402c-a1f0-762cdf2e67a5",
+        "name": "tone.wav",
+        "assetKey": "8cbb26de-2c39-402c-a1f0-762cdf2e67a5.wav",
+        "durationSeconds": 2,
+        "trimStartSeconds": 0.25,
+        "trimEndSeconds": 1.25
+      },
+      {
+        "id": "4fd9a3f7-70a7-4caf-af7c-9290075d9eba",
+        "name": "tone.mp3",
+        "assetKey": "4fd9a3f7-70a7-4caf-af7c-9290075d9eba.mp3",
+        "durationSeconds": 2.0375510204081633,
+        "trimStartSeconds": 0,
+        "trimEndSeconds": 2.0375510204081633
+      }
+    ],
+    "boards": [
+      {
+        "id": "d15223a9-59af-4212-ae43-b92e753e8822",
+        "name": "Main stage",
+        "buttons": [
+          {
+            "id": "d1a38f42-5167-431a-a70f-801664eaee78",
+            "label": "Cue",
+            "soundId": "8cbb26de-2c39-402c-a1f0-762cdf2e67a5",
+            "x": 0,
+            "y": 1,
+            "width": 2,
+            "height": 1
+          }
+        ]
+      }
+    ]
+  },
+  "firstRace": {
+    "version": 1,
+    "sounds": [],
+    "boards": [
+      {
+        "id": "56fb1ccb-301a-434b-a1e1-d993561c7fb2",
+        "name": "First D",
+        "buttons": []
+      }
+    ]
+  },
+  "updateRace": {
+    "version": 1,
+    "sounds": [],
+    "boards": [
+      {
+        "id": "56fb1ccb-301a-434b-a1e1-d993561c7fb2",
+        "name": "Update D",
+        "buttons": []
+      }
+    ]
+  }
+}

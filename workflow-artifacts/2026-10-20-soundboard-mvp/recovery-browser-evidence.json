@@ -1,0 +1,4 @@
+{
+  "browser": "155.0.8059.85",
+  "result": "PASS: loaded app works offline; canceled selection unchanged; real commit abort preserves editor/retry; partial recovery never rewrites raw text; broken JSON and unexpected object protected; missing asset disables only affected pad; valid MP3 still plays"
+}
