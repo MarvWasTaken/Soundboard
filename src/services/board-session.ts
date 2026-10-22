@@ -5,8 +5,8 @@ export type BoardMode = 'play' | 'edit';
 export class BoardSession {
   state: { boardId?: string; mode: BoardMode } = { mode: 'play' };
   private getState: () => LibraryState;
-  private playback: Pick<Playback, 'play' | 'stop'>;
-  constructor(getState: () => LibraryState, playback: Pick<Playback, 'play' | 'stop'>) { this.getState = getState; this.playback = playback; }
+  private playback: Pick<Playback, 'toggleBoardButton' | 'stop'>;
+  constructor(getState: () => LibraryState, playback: Pick<Playback, 'toggleBoardButton' | 'stop'>) { this.getState = getState; this.playback = playback; }
   reconcile() {
     const boards = this.getState().boards;
     if (!boards.some(board => board.id === this.state.boardId)) this.selectBoard(boards[0]?.id);
@@ -25,6 +25,6 @@ export class BoardSession {
     if (this.state.mode === 'edit') return button;
     const sound = state.sounds.find(entry => entry.id === button.soundId);
     if (!sound) throw new AppError('missing', 'Der Sound dieses Buttons ist nicht verfügbar. Bitte im Bearbeitungsmodus neu zuweisen.');
-    void this.playback.play(sound); return undefined;
+    void this.playback.toggleBoardButton(sound, { boardId: this.state.boardId!, buttonId: button.id }); return undefined;
   }
 }

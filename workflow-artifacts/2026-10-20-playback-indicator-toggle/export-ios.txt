@@ -1,0 +1,20 @@
+
+> soundboard@1.0.0 export:ios
+> expo export --platform ios --output-dir dist/ios --source-maps
+
+Starting Metro Bundler
+
+| (node:29656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:29656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+iOS Bundled 2895ms index.ts (716 modules)
+
+› ios bundles (2):
+_expo/static/js/ios/index-9857286a1901be4b7fefe9dc4c645dd6.hbc (1.5MB)
+_expo/static/js/ios/index-9857286a1901be4b7fefe9dc4c645dd6.hbc.map (4.3MB)
+
+› Files (1):
+metadata.json (142B)
+
+Exported: dist/ios

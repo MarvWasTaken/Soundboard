@@ -1,0 +1,155 @@
+{
+  "result": "PASS",
+  "browser": "155.0.8059.86",
+  "schedulerToleranceSeconds": 0.2,
+  "desktop": {
+    "first": {
+      "seconds": 1.151,
+      "fraction": 0.2893995098039216,
+      "engineSeconds": 1.1625396825396825,
+      "box": {
+        "x": 402.59375,
+        "y": 485.5,
+        "width": 4,
+        "height": 18
+      },
+      "track": {
+        "x": 257,
+        "y": 485.5,
+        "width": 510
+      },
+      "liveRegion": false
+    },
+    "second": {
+      "seconds": 1.36,
+      "fraction": 0.34120710784313724,
+      "engineSeconds": 1.4121541950113379,
+      "box": {
+        "x": 429.015625,
+        "y": 485.5,
+        "width": 4,
+        "height": 18
+      },
+      "track": {
+        "x": 257,
+        "y": 485.5,
+        "width": 510
+      },
+      "liveRegion": false
+    }
+  },
+  "mobile": {
+    "first": {
+      "seconds": 1.099,
+      "fraction": 0.2775974025974026,
+      "engineSeconds": 1.1451247165532883,
+      "box": {
+        "x": 124.5,
+        "y": 447,
+        "width": 4,
+        "height": 18
+      },
+      "track": {
+        "x": 41,
+        "y": 447,
+        "width": 308
+      },
+      "liveRegion": false
+    },
+    "second": {
+      "seconds": 1.354,
+      "fraction": 0.3406554383116883,
+      "engineSeconds": 1.3657142857142857,
+      "box": {
+        "x": 143.921875,
+        "y": 447,
+        "width": 4,
+        "height": 18
+      },
+      "track": {
+        "x": 41,
+        "y": 447,
+        "width": 308
+      },
+      "liveRegion": false
+    }
+  },
+  "board": {
+    "starts": [
+      {
+        "id": 0,
+        "contextId": 0,
+        "clock": 0.011609977324263039,
+        "offset": 1,
+        "duration": 1.7999999999999998
+      },
+      {
+        "id": 1,
+        "contextId": 1,
+        "clock": 0.11029478458049886,
+        "offset": 1,
+        "duration": 1.7999999999999998
+      },
+      {
+        "id": 2,
+        "contextId": 2,
+        "clock": 0.1799546485260771,
+        "offset": 1,
+        "duration": 1.7999999999999998
+      },
+      {
+        "id": 3,
+        "contextId": 3,
+        "clock": 0.2438095238095238,
+        "offset": 1,
+        "duration": 1.7999999999999998
+      },
+      {
+        "id": 4,
+        "contextId": 4,
+        "clock": 0.34249433106575966,
+        "offset": 1,
+        "duration": 1.7999999999999998
+      },
+      {
+        "id": 5,
+        "contextId": 5,
+        "clock": 0.45859410430839004,
+        "offset": 1,
+        "duration": 1.7999999999999998
+      },
+      {
+        "id": 6,
+        "contextId": 6,
+        "clock": 0.5630839002267574,
+        "offset": 1,
+        "duration": 1.7999999999999998
+      },
+      {
+        "id": 7,
+        "contextId": 7,
+        "clock": 0.8823582766439909,
+        "offset": 1,
+        "duration": 1.7999999999999998
+      },
+      {
+        "id": 8,
+        "contextId": 8,
+        "clock": 1.0100680272108844,
+        "offset": 1,
+        "duration": 1.7999999999999998
+      },
+      {
+        "id": 9,
+        "contextId": 9,
+        "clock": 2.9024943310657596,
+        "offset": 1,
+        "duration": 1.7999999999999998
+      }
+    ],
+    "maxActive": 1,
+    "active": []
+  },
+  "checks": "absolute nonzero trim; progressing text/marker; engine clock and full-file geometry; stop/end/change/reset/cancel/save/reload cleanup; invalid draft; explicit preview unchanged draft; same/different boardbutton; keyboard Enter/Space; touch; global/mode/board stop",
+  "limitations": "Headless Chrome is silent; no physical iPhone/iPad or Safari execution. Native status/clock tests and iOS export cover contract/bundling only."
+}

@@ -1,0 +1,23 @@
+✔ native playback seeks first and schedules the endpoint only after actual playing status (4.564167ms)
+✔ abort during native seek removes the player and never calls play later (0.882875ms)
+✔ buffering clears the timer; resume recomputes remaining duration and endpoint cleans all resources (0.337625ms)
+✔ native pause/interruption, errors and observed endpoint stop without automatic resume (0.311958ms)
+✔ native load timeout rejects visibly and clears subscriptions and timers (0.875458ms)
+✔ native listener setup failure releases the player and startup timer (0.151959ms)
+✔ native inspection cleans its player and listeners without starting playback (0.147291ms)
+✔ native inspection setup error leaves no delayed timer callback or retained player (0.078875ms)
+✔ native adapters wait for a positive duration even when the loaded flag arrives first (1.096625ms)
+✔ native position follows confirmed statuses, holds during buffering and ignores invalid or late values (0.199166ms)
+✔ web engine unlocks immediately and starts with an audio-clock offset and duration (2.084625ms)
+✔ web ended and stop release nodes once and remove old state listeners (0.731417ms)
+✔ suspended web context interrupts and cleans the active source (0.211041ms)
+✔ aborted web decode creates no playing source (0.691ms)
+✔ web positions use absolute engine time, clamp, and freeze after cleanup (1.195125ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 155.811833

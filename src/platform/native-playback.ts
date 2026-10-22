@@ -33,6 +33,7 @@ export function beginNativePlayback(player: NativePlayer, range: AudioRange, onE
   return new Promise((resolve, reject) => {
     let finished = false;
     let started = false;
+    let position = range.start;
     let phase: 'loading' | 'seeking' | 'starting' | 'playing' = 'loading';
     let endTimer: unknown;
     let startupTimer: unknown;
@@ -68,20 +69,21 @@ export function beginNativePlayback(player: NativePlayer, range: AudioRange, onE
         void seekAndPlay(); return;
       }
       if (phase === 'seeking') return;
-      if (status.didJustFinish || status.currentTime >= range.end) { finish({ type: 'ended' }); return; }
+      if (status.didJustFinish || (Number.isFinite(status.currentTime) && status.currentTime >= range.end)) { finish({ type: 'ended' }); return; }
       clearEndTimer();
       if (status.isBuffering) return;
       if (!status.playing) {
         if (started) finish({ type: 'interrupted' });
         return;
       }
+      if (Number.isFinite(status.currentTime)) position = Math.max(range.start, Math.min(range.end, status.currentTime));
       if (!started) {
         started = true; phase = 'playing';
         if (startupTimer !== undefined) clock.clear(startupTimer);
-        resolve({ stop: () => finish() });
+        resolve({ stop: () => finish(), getPositionSeconds: () => position });
       }
       // Expo has no native end boundary. Recompute from the actual playback position.
-      endTimer = clock.set(() => finish({ type: 'ended' }), Math.max(0, (range.end - status.currentTime) * 1000));
+      endTimer = clock.set(() => finish({ type: 'ended' }), Math.max(0, (range.end - position) * 1000));
     }
     signal.addEventListener('abort', abort, { once: true });
     startupTimer = clock.set(() => finish({ type: 'error', message: 'Der Sound konnte nicht rechtzeitig gestartet werden. Bitte erneut versuchen.' }), 15_000);

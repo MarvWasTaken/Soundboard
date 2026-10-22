@@ -1,0 +1,4 @@
+
+> soundboard@1.0.0 typecheck
+> tsc --noEmit && tsc --noEmit -p tsconfig.web.json
+

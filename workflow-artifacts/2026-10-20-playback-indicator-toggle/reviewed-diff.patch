@@ -1,0 +1,639 @@
+diff --git a/README.md b/README.md
+index 74f5b65..36cfb17 100644
+--- a/README.md
++++ b/README.md
+@@ -16,10 +16,10 @@ Expo zeigt die lokale URL an, normalerweise `http://localhost:8081`. Einen ander
+ ## Bedienung
+ 
+ 1. Über **Sound importieren** eine MP3- oder PCM-WAV-Datei auswählen. Die App übernimmt die Datei in ihren lokalen Speicher.
+-2. In der Bibliothek **Ausschnitt** öffnen, Start und Ende in Sekunden eingeben und die Vorschau prüfen. Punkt und Dezimalkomma sind möglich. **Speichern** übernimmt die Auswahl; **Abbrechen** verwirft den Entwurf. Die Originaldatei bleibt unverändert.
++2. In der Bibliothek **Ausschnitt** öffnen, Start und Ende in Sekunden eingeben und die Vorschau prüfen. Während der Wiedergabe zeigen eine kontrastierende Positionslinie und die Wiedergabeposition in Sekunden die aktuelle Stelle in der gesamten Datei. Punkt und Dezimalkomma sind möglich. **Speichern** übernimmt die Auswahl; **Abbrechen** verwirft den Entwurf. Die Originaldatei bleibt unverändert.
+ 3. Ein benanntes Board erstellen. Im **Bearbeitungsmodus** einen Button mit Beschriftung und Sound hinzufügen.
+ 4. Einen Button im Bearbeitungsmodus öffnen. Mit den Richtungstasten Position und mit **Kompakt / Breit / Hoch / Groß** seine Größe ändern. Ungültige Schritte und Überlappungen werden erklärt; die letzte gültige Auswahl bleibt bestehen. Anschließend speichern.
+-5. Zu **Abspielen** wechseln und einen Button aktivieren. Er startet den gespeicherten Ausschnitt. Erneute Aktivierung startet neu; ein anderer Sound, **Wiedergabe stoppen** oder ein Boardwechsel beendet die vorherige Wiedergabe.
++5. Zu **Abspielen** wechseln und einen Button aktivieren. Er startet den gespeicherten Ausschnitt. Erneute Aktivierung desselben Buttons stoppt auch während des Ladens; der nächste Druck startet wieder am gespeicherten Anfang. Ein anderer Button (auch mit demselben Sound), **Wiedergabe stoppen** oder ein Boardwechsel beendet die vorherige Wiedergabe. Bibliotheks- und Vorschaustarts beginnen bei erneuter Aktivierung neu.
+ 
+ Das Raster hat zwei Spalten und wächst nach unten. Auf kleinen Bildschirmen wird gescrollt. Ein Sound kann mehreren Buttons und Boards zugewiesen sein; Änderungen seines Ausschnitts gelten für alle. Das Löschen eines Buttons oder Boards entfernt keine Bibliothekssounds. Boardlöschung erfordert einen eigenen Bestätigungsschritt. Es gibt kein kleines festes Demo-Limit für die Anzahl der Boards oder Buttons; verfügbare Ressourcen begrenzen den tatsächlichen Bestand.
+ 
+@@ -85,3 +85,5 @@ Native Ausschnittenden werden mit Expo-Statusmeldungen und einem aus der tatsäc
+ Die vollständige Anforderungs-/Prüfzuordnung, beobachtete Red–Green-Zyklen und verbleibende Grenzen stehen in [implementation.md](workflow-artifacts/2026-10-20-soundboard-mvp/implementation.md). Die getrennte Abhängigkeitsanalyse ist in [audit-analysis.md](workflow-artifacts/2026-10-20-soundboard-mvp/audit-analysis.md) festgehalten; ein SDK-fremdes Force-Upgrade ist kein Bestandteil dieses Projekts.
+ 
+ Die finale Browserabnahme lief gegen den neu exportierten Produktionsstand auf Port 8082. `npm audit` meldet weiterhin 22 transitive Meldungen (7 moderate, 15 high) aus drei Advisory-Wurzeln. Die betroffenen Pakete `braces`, `node-forge` und `uuid` sowie deren Xcode-/Signaturwerkzeuge sind in den geprüften tatsächlichen Web-/iOS-Sourcemapquellen nicht enthalten. Der Metro-Modullader `@expo/cli/build/metro-require/require.js` ist enthalten; er ist von den betroffenen Werkzeugpfaden zu unterscheiden. Die Befunde im installierten Entwicklungs-/Buildwerkzeugbaum wurden dadurch nicht repariert. Details und die verbleibende Werkzeugrelevanz sind in der Analyse und `bundle-audit-evidence.json` dokumentiert.
++
++Die inkrementelle Prüfung von Wiedergabeposition und Button-Stopp liegt unter `workflow-artifacts/2026-10-20-playback-indicator-toggle/`: `SOUNDBOARD_URL=http://localhost:8082 node scripts/playback-indicator-smoke.mjs` prüft den tatsächlichen Webexport mit Engine-Zeitvergleich, Desktop/390px, Tastatur und Touch. Die Vorschau muss separat mit `npm run preview:web` laufen. `SOUNDBOARD_EVIDENCE_DIR` ändert bei diesem sowie den Playback-/Board-Smokes das Ausgabeverzeichnis. Native Vertragsprüfungen und iOS-Export ersetzen weiterhin keine Geräte- oder Safari-Abnahme.
+diff --git a/scripts/board-smoke.mjs b/scripts/board-smoke.mjs
+index f4dc752..f1bc01a 100644
+--- a/scripts/board-smoke.mjs
++++ b/scripts/board-smoke.mjs
+@@ -1,7 +1,8 @@
+ import { chromium } from 'playwright';
+ import assert from 'node:assert/strict';
+ import fs from 'node:fs/promises';
+-const run = 'workflow-artifacts/2026-10-20-soundboard-mvp';
++const run = process.env.SOUNDBOARD_EVIDENCE_DIR ?? 'workflow-artifacts/2026-10-20-soundboard-mvp';
++await fs.mkdir(run, { recursive: true });
+ const browser = await chromium.launch({ headless: true, channel: 'chrome' });
+ const page = await browser.newPage({ viewport: { width: 1024, height: 1000 }, hasTouch: true });
+ const errors = []; page.on('pageerror', error => errors.push(error.message));
+diff --git a/scripts/playback-smoke.mjs b/scripts/playback-smoke.mjs
+index 5cd3f4a..c32b8d8 100644
+--- a/scripts/playback-smoke.mjs
++++ b/scripts/playback-smoke.mjs
+@@ -2,7 +2,8 @@ import { chromium } from 'playwright';
+ import assert from 'node:assert/strict';
+ import fs from 'node:fs/promises';
+ import { createHash } from 'node:crypto';
+-const run = 'workflow-artifacts/2026-10-20-soundboard-mvp';
++const run = process.env.SOUNDBOARD_EVIDENCE_DIR ?? 'workflow-artifacts/2026-10-20-soundboard-mvp';
++await fs.mkdir(run, { recursive: true });
+ const browser = await chromium.launch({ headless: true, channel: 'chrome' });
+ const page = await browser.newPage({ viewport: { width: 1024, height: 1000 } });
+ const errors = []; page.on('pageerror', error => errors.push(error.message));
+diff --git a/src/platform/audio.web.ts b/src/platform/audio.web.ts
+index 6c92180..9dc64b8 100644
+--- a/src/platform/audio.web.ts
++++ b/src/platform/audio.web.ts
+@@ -21,9 +21,18 @@ export class LocalAudio {
+     validateRange(range, buffer.duration);
+     const source = context.createBufferSource(); source.buffer = buffer;
+     let finished = false;
++    const origin = context.currentTime;
++    let position = range.start;
++    const getPositionSeconds = () => {
++      if (!finished) {
++        const measured = range.start + context.currentTime - origin;
++        if (Number.isFinite(measured)) position = Math.max(range.start, Math.min(range.end, measured));
++      }
++      return position;
++    };
+     const finish = (event?: PlaybackEvent) => {
+       if (finished) return;
+-      finished = true; source.onended = null;
++      getPositionSeconds(); finished = true; source.onended = null;
+       signal.removeEventListener('abort', abort); context.removeEventListener('statechange', stateChanged);
+       try { source.stop(); } catch { /* A naturally ended node is already stopped. */ }
+       source.disconnect(); if (event) onEvent(event);
+@@ -37,7 +46,7 @@ export class LocalAudio {
+       // Offset and duration are enforced by the audio engine, independent of JS timers.
+       source.start(0, range.start, range.end - range.start);
+     } catch { finish(); throw new AppError('playback', 'Der Sound konnte nicht gestartet werden. Bitte erneut versuchen.'); }
+-    return { stop: () => finish() };
++    return { stop: () => finish(), getPositionSeconds };
+   }
+   async inspect(asset: PlayableAsset) {
+     const buffer = await this.decode(asset);
+diff --git a/src/platform/contracts.ts b/src/platform/contracts.ts
+index 924ef06..223f722 100644
+--- a/src/platform/contracts.ts
++++ b/src/platform/contracts.ts
+@@ -14,7 +14,7 @@ export interface Repository {
+ export interface AudioInspector { inspect(asset: PlayableAsset): Promise<{ durationSeconds: number }> }
+ export interface Picker { pick(): Promise<PickedFile | null> }
+ export type PlaybackEvent = { type: 'ended' | 'interrupted' } | { type: 'error'; message: string };
+-export type PlaybackHandle = { stop(): void };
++export type PlaybackHandle = { stop(): void; getPositionSeconds(): number };
+ export interface AudioPlayback {
+   unlockFromGesture(): Promise<void>;
+   begin(asset: PlayableAsset, range: AudioRange, onEvent: (event: PlaybackEvent) => void, signal: AbortSignal): Promise<PlaybackHandle>;
+diff --git a/src/platform/native-playback.ts b/src/platform/native-playback.ts
+index f18064f..4871d34 100644
+--- a/src/platform/native-playback.ts
++++ b/src/platform/native-playback.ts
+@@ -33,6 +33,7 @@ export function beginNativePlayback(player: NativePlayer, range: AudioRange, onE
+   return new Promise((resolve, reject) => {
+     let finished = false;
+     let started = false;
++    let position = range.start;
+     let phase: 'loading' | 'seeking' | 'starting' | 'playing' = 'loading';
+     let endTimer: unknown;
+     let startupTimer: unknown;
+@@ -68,20 +69,21 @@ export function beginNativePlayback(player: NativePlayer, range: AudioRange, onE
+         void seekAndPlay(); return;
+       }
+       if (phase === 'seeking') return;
+-      if (status.didJustFinish || status.currentTime >= range.end) { finish({ type: 'ended' }); return; }
++      if (status.didJustFinish || (Number.isFinite(status.currentTime) && status.currentTime >= range.end)) { finish({ type: 'ended' }); return; }
+       clearEndTimer();
+       if (status.isBuffering) return;
+       if (!status.playing) {
+         if (started) finish({ type: 'interrupted' });
+         return;
+       }
++      if (Number.isFinite(status.currentTime)) position = Math.max(range.start, Math.min(range.end, status.currentTime));
+       if (!started) {
+         started = true; phase = 'playing';
+         if (startupTimer !== undefined) clock.clear(startupTimer);
+-        resolve({ stop: () => finish() });
++        resolve({ stop: () => finish(), getPositionSeconds: () => position });
+       }
+       // Expo has no native end boundary. Recompute from the actual playback position.
+-      endTimer = clock.set(() => finish({ type: 'ended' }), Math.max(0, (range.end - status.currentTime) * 1000));
++      endTimer = clock.set(() => finish({ type: 'ended' }), Math.max(0, (range.end - position) * 1000));
+     }
+     signal.addEventListener('abort', abort, { once: true });
+     startupTimer = clock.set(() => finish({ type: 'error', message: 'Der Sound konnte nicht rechtzeitig gestartet werden. Bitte erneut versuchen.' }), 15_000);
+diff --git a/src/services/board-session.ts b/src/services/board-session.ts
+index 320ceea..03ae01b 100644
+--- a/src/services/board-session.ts
++++ b/src/services/board-session.ts
+@@ -5,8 +5,8 @@ export type BoardMode = 'play' | 'edit';
+ export class BoardSession {
+   state: { boardId?: string; mode: BoardMode } = { mode: 'play' };
+   private getState: () => LibraryState;
+-  private playback: Pick<Playback, 'play' | 'stop'>;
+-  constructor(getState: () => LibraryState, playback: Pick<Playback, 'play' | 'stop'>) { this.getState = getState; this.playback = playback; }
++  private playback: Pick<Playback, 'toggleBoardButton' | 'stop'>;
++  constructor(getState: () => LibraryState, playback: Pick<Playback, 'toggleBoardButton' | 'stop'>) { this.getState = getState; this.playback = playback; }
+   reconcile() {
+     const boards = this.getState().boards;
+     if (!boards.some(board => board.id === this.state.boardId)) this.selectBoard(boards[0]?.id);
+@@ -25,6 +25,6 @@ export class BoardSession {
+     if (this.state.mode === 'edit') return button;
+     const sound = state.sounds.find(entry => entry.id === button.soundId);
+     if (!sound) throw new AppError('missing', 'Der Sound dieses Buttons ist nicht verfügbar. Bitte im Bearbeitungsmodus neu zuweisen.');
+-    void this.playback.play(sound); return undefined;
++    void this.playback.toggleBoardButton(sound, { boardId: this.state.boardId!, buttonId: button.id }); return undefined;
+   }
+ }
+diff --git a/src/services/playback.ts b/src/services/playback.ts
+index e9f2fbb..74e2832 100644
+--- a/src/services/playback.ts
++++ b/src/services/playback.ts
+@@ -2,28 +2,68 @@ import type { Sound } from '../domain/model.ts';
+ import type { AudioPlayback, AudioRange, PlaybackHandle, Repository } from '../platform/contracts.ts';
+ import { AppError, errorMessage } from '../domain/errors.ts';
+ import { validateRange } from '../domain/trim.ts';
+-export type PlaybackState = { status: 'idle' | 'loading' | 'playing' | 'error'; soundId?: string; message?: string };
++export type PlaybackState = { status: 'idle' | 'loading' | 'playing' | 'error'; soundId?: string; message?: string; positionSeconds?: number };
++export type PositionScheduler = { set(callback: () => void, milliseconds: number): unknown; clear(token: unknown): void };
++const positionScheduler: PositionScheduler = { set: (callback, milliseconds) => setTimeout(callback, milliseconds), clear: token => clearTimeout(token as ReturnType<typeof setTimeout>) };
++export type BoardButtonOrigin = { boardId: string; buttonId: string };
+ export class Playback {
+   state: PlaybackState = { status: 'idle' };
+   private generation = 0;
++  private boardOrigin?: BoardButtonOrigin;
+   private pending?: AbortController;
+   private handle?: PlaybackHandle;
++  private positionTimer?: unknown;
++  private scheduler: PositionScheduler;
+   private listeners = new Set<(state: PlaybackState) => void>();
+   private repository: Pick<Repository, 'resolve'>;
+   private audio: AudioPlayback;
+-  constructor(repository: Pick<Repository, 'resolve'>, audio: AudioPlayback) { this.repository = repository; this.audio = audio; }
++  constructor(repository: Pick<Repository, 'resolve'>, audio: AudioPlayback, scheduler = positionScheduler) { this.repository = repository; this.audio = audio; this.scheduler = scheduler; }
+   private publish(state: PlaybackState) { this.state = state; this.listeners.forEach(listener => listener(state)); }
+   subscribe(listener: (state: PlaybackState) => void) {
+     this.listeners.add(listener); return () => { this.listeners.delete(listener); };
+   }
+   stop() {
+     this.generation++;
++    this.boardOrigin = undefined;
++    if (this.positionTimer !== undefined) this.scheduler.clear(this.positionTimer);
++    this.positionTimer = undefined;
+     this.pending?.abort(); this.pending = undefined;
+     const handle = this.handle; this.handle = undefined; handle?.stop();
+     this.publish({ status: 'idle' });
+   }
+-  async play(sound: Sound, range: AudioRange = { start: sound.trimStartSeconds, end: sound.trimEndSeconds }) {
++  private trackPosition(soundId: string, range: AudioRange, handle: PlaybackHandle, generation: number) {
++    const isCurrent = () => generation === this.generation && handle === this.handle;
++    const poll = () => {
++      if (!isCurrent()) return;
++      this.positionTimer = undefined;
++      try {
++        const measured = handle.getPositionSeconds();
++        const positionSeconds = Number.isFinite(measured) ? Math.max(range.start, Math.min(range.end, measured)) : this.state.positionSeconds ?? range.start;
++        if (this.state.status !== 'playing' || positionSeconds !== this.state.positionSeconds) this.publish({ status: 'playing', soundId, positionSeconds });
++        // A subscriber can synchronously stop or replace this session.
++        if (isCurrent()) this.positionTimer = this.scheduler.set(poll, 50);
++      } catch (error) {
++        if (isCurrent()) this.fail(error);
++      }
++    };
++    poll();
++  }
++  private fail(error: unknown) {
++    this.stop();
++    this.publish({ status: 'error', message: error instanceof AppError ? errorMessage(error) : 'Der Sound konnte nicht abgespielt werden. Bitte Datei und Audioberechtigung prüfen und erneut starten.' });
++  }
++  play(sound: Sound, range: AudioRange = { start: sound.trimStartSeconds, end: sound.trimEndSeconds }) {
++    return this.start(sound, range);
++  }
++  toggleBoardButton(sound: Sound, origin: BoardButtonOrigin) {
++    if ((this.state.status === 'loading' || this.state.status === 'playing') && this.boardOrigin?.boardId === origin.boardId && this.boardOrigin.buttonId === origin.buttonId) {
++      this.stop(); return Promise.resolve();
++    }
++    return this.start(sound, { start: sound.trimStartSeconds, end: sound.trimEndSeconds }, origin);
++  }
++  private async start(sound: Sound, range: AudioRange, origin?: BoardButtonOrigin) {
+     this.stop();
++    this.boardOrigin = origin;
+     const generation = this.generation;
+     const pending = new AbortController(); this.pending = pending;
+     this.publish({ status: 'loading', soundId: sound.id });
+@@ -43,11 +83,10 @@ export class Playback {
+       }, pending.signal);
+       if (generation !== this.generation) { handle.stop(); return; }
+       this.handle = handle;
+-      this.publish({ status: 'playing', soundId: sound.id });
++      this.trackPosition(sound.id, range, handle, generation);
+     } catch (error) {
+       if (generation !== this.generation) return;
+-      this.stop();
+-      this.publish({ status: 'error', message: error instanceof AppError ? errorMessage(error) : 'Der Sound konnte nicht abgespielt werden. Bitte Datei und Audioberechtigung prüfen und erneut starten.' });
++      this.fail(error);
+     }
+   }
+ }
+diff --git a/src/ui/SoundEditor.tsx b/src/ui/SoundEditor.tsx
+index 8ad590d..ed9e984 100644
+--- a/src/ui/SoundEditor.tsx
++++ b/src/ui/SoundEditor.tsx
+@@ -16,7 +16,10 @@ export function SoundEditor({ sound, unavailable, readOnly, onReload, playbackSt
+   const [error, setError] = useState(''); const [saving, setSaving] = useState(false);
+   let range: AudioRange | undefined; let validationError = '';
+   try { range = rangeFromDraft(draft, sound.durationSeconds); } catch (failure) { validationError = errorMessage(failure); }
+-  const active = playbackState.status === 'playing' || playbackState.status === 'loading';
++  const active = playbackState.soundId === sound.id && (playbackState.status === 'playing' || playbackState.status === 'loading');
++  const position = playbackState.status === 'playing' && playbackState.soundId === sound.id && Number.isFinite(playbackState.positionSeconds)
++    ? Math.max(0, Math.min(sound.durationSeconds, playbackState.positionSeconds!)) : undefined;
++  const positionFraction = position === undefined ? 0 : position / sound.durationSeconds;
+   const close = () => { if (!saving) { onStop(); onClose(); } };
+   function change(field: 'startText' | 'endText', text: string) {
+     onStop(); setError(''); setDraft(previous => ({ ...previous, [field]: text }));
+@@ -43,9 +46,11 @@ export function SoundEditor({ sound, unavailable, readOnly, onReload, playbackSt
+             </View>)}
+           </View>
+           <View style={{ gap: 10 }}>
+-            <View style={{ height: 18, borderRadius: 9, backgroundColor: '#e6eae3', overflow: 'hidden' }}>
++            <View testID="trim-timeline" style={{ height: 18, borderRadius: 9, backgroundColor: '#e6eae3', overflow: 'hidden' }}>
+               {range && <View style={{ position: 'absolute', height: '100%', left: `${range.start / sound.durationSeconds * 100}%`, width: `${(range.end - range.start) / sound.durationSeconds * 100}%`, backgroundColor: colors.accent }} />}
++              {position !== undefined && <View testID="playback-position-marker" style={{ position: 'absolute', height: '100%', width: 4, left: `${positionFraction * 100}%`, marginLeft: -4 * positionFraction, backgroundColor: '#fff', borderLeftWidth: 1, borderRightWidth: 1, borderColor: colors.ink }} />}
+             </View>
++            {position !== undefined && <Text testID="playback-position-text" style={[styles.body, { fontWeight: '600', fontVariant: ['tabular-nums'] }]}>Wiedergabeposition: {position.toFixed(3)} s</Text>}
+             <Text style={styles.body}>{range ? `Auswahl: ${range.start.toFixed(3)}–${range.end.toFixed(3)} s · ${(range.end - range.start).toFixed(3)} s Länge` : 'Auswahl ungültig'}</Text>
+           </View>
+           {!!(validationError || error) && <View accessibilityRole="alert" style={styles.notice}><Text style={styles.noticeText}>{error || validationError}</Text></View>}
+diff --git a/tests/board-session.test.ts b/tests/board-session.test.ts
+index 662336c..df5c85e 100644
+--- a/tests/board-session.test.ts
++++ b/tests/board-session.test.ts
+@@ -7,7 +7,7 @@ const button = { id: 'button', label: 'Tone', soundId: 's', x: 0, y: 0, width: 1
+ test('edit activations do not play, board switches stop, and play resolves current shared trim for both assignments', () => {
+   const state: LibraryState = { version: 1, sounds: [sound], boards: [{ id: 'a', name: 'A', buttons: [button, { ...button, id: 'second', x: 1 }] }, { id: 'b', name: 'B', buttons: [] }] };
+   const plays: Sound[] = []; let stops = 0;
+-  const session = new BoardSession(() => state, { play: async selected => { plays.push(selected); }, stop() { stops++; } });
++  const session = new BoardSession(() => state, { toggleBoardButton: async selected => { plays.push(selected); }, stop() { stops++; } });
+   session.reconcile(); assert.equal(session.state.boardId, 'a');
+   session.setMode('edit'); assert.deepEqual(session.activate('button'), button); assert.equal(plays.length, 0);
+   session.setMode('play'); session.activate('button');
+@@ -18,8 +18,69 @@ test('edit activations do not play, board switches stop, and play resolves curre
+ });
+ test('deleting the selected or last board chooses a valid empty state and absent sounds cannot be played', () => {
+   const state: LibraryState = { version: 1, sounds: [], boards: [{ id: 'a', name: 'A', buttons: [button] }] };
+-  const session = new BoardSession(() => state, { play: async () => { assert.fail('missing sound'); }, stop() {} });
++  const session = new BoardSession(() => state, { toggleBoardButton: async () => { assert.fail('missing sound'); }, stop() {} });
+   session.reconcile(); assert.throws(() => session.activate('button'));
+   session.setMode('edit'); assert.deepEqual(session.activate('button'), button);
+   state.boards = []; session.reconcile(); assert.equal(session.state.boardId, undefined);
+ });
++
++import { Playback } from '../src/services/playback.ts';
++import type { AudioPlayback, PlaybackEvent, PlaybackHandle } from '../src/platform/contracts.ts';
++const flush = () => new Promise(resolve => setImmediate(resolve));
++function toggleHarness() {
++  const state: LibraryState = { version: 1, sounds: [sound], boards: [{ id: 'a', name: 'A', buttons: [button, { ...button, id: 'second' }] }, { id: 'b', name: 'B', buttons: [button] }] };
++  const calls: { stopped: boolean; event: (event: PlaybackEvent) => void; signal: AbortSignal; range: unknown }[] = [];
++  const audio: AudioPlayback = { unlockFromGesture: async () => {}, async begin(_asset, range, event, signal) {
++    const call = { stopped: false, event, signal, range }; calls.push(call);
++    return { stop() { call.stopped = true; }, getPositionSeconds: () => range.start };
++  } };
++  const tasks = new Map<number, () => void>(); let id = 0;
++  const repository = { resolve: async () => ({ source: 'local' }) };
++  const playback = new Playback(repository, audio, { set(callback) { tasks.set(++id, callback); return id; }, clear(token) { tasks.delete(token as number); } });
++  const session = new BoardSession(() => state, playback); session.reconcile();
++  return { state, calls, audio, repository, playback, session, tasks };
++}
++test('same concrete boardbutton stops on second press and restarts on third', async () => {
++  const h = toggleHarness(); h.session.activate('button'); await flush();
++  h.session.activate('button'); await flush();
++  assert.equal(h.playback.state.status, 'idle'); assert.equal(h.calls.length, 1); assert.equal(h.calls[0].stopped, true); assert.equal(h.tasks.size, 0);
++  h.session.activate('button'); await flush(); assert.equal(h.calls.length, 2); assert.deepEqual(h.calls[1].range, { start: 0, end: 2 }); h.playback.stop();
++});
++test('different buttons sharing a sound replace, and identical button IDs on different boards are distinct', async () => {
++  const h = toggleHarness(); h.session.activate('button'); await flush(); h.session.activate('second'); await flush();
++  assert.equal(h.calls.length, 2); assert.equal(h.calls[0].stopped, true);
++  // Change selected identity without the separate board-switch cleanup to exercise the origin contract.
++  h.session.activate('button'); await flush();
++  h.session.state.boardId = 'b'; h.session.activate('button'); await flush();
++  assert.equal(h.calls.length, 4); assert.equal(h.calls[2].stopped, true); h.playback.stop();
++});
++test('terminal events, global stop, explicit play, mode and board changes release board origin', async () => {
++  for (const finish of ['ended', 'interrupted', 'error', 'stop', 'explicit', 'mode', 'board'] as const) {
++    const h = toggleHarness(); h.session.activate('button'); await flush();
++    if (finish === 'stop') h.playback.stop();
++    else if (finish === 'explicit') await h.playback.play(sound);
++    else if (finish === 'mode') { h.session.setMode('edit'); h.session.setMode('play'); }
++    else if (finish === 'board') { h.session.selectBoard('b'); h.session.selectBoard('a'); }
++    else h.calls[0].event(finish === 'error' ? { type: finish, message: 'decoder' } : { type: finish });
++    const before = h.calls.length; h.session.activate('button'); await flush(); assert.equal(h.calls.length, before + 1, finish); assert.equal(h.playback.state.status, 'playing'); h.playback.stop();
++  }
++});
++test('loading A–A, A–B, A–A–A cancel pending resolution and only the last intended sound begins', async () => {
++  for (const sequence of [['button', 'button'], ['button', 'second'], ['button', 'button', 'button']]) {
++    const h = toggleHarness(); const resolves: (() => void)[] = [];
++    h.repository.resolve = () => new Promise(resolve => resolves.push(() => resolve({ source: 'local' })));
++    for (const id of sequence) { h.session.activate(id); await flush(); }
++    resolves.forEach(resolve => resolve()); await flush();
++    assert.equal(h.calls.length, sequence.length === 2 && sequence[1] === 'button' ? 0 : 1);
++    assert.equal(h.playback.state.status, h.calls.length ? 'playing' : 'idle'); h.playback.stop(); assert.equal(h.tasks.size, 0);
++  }
++});
++test('a late handle after A–A–A is stopped and its events cannot displace the last A', async () => {
++  const h = toggleHarness(); let resolveOld!: (handle: PlaybackHandle) => void, oldEvent!: (event: PlaybackEvent) => void, stopped = 0, begins = 0;
++  const begin = h.audio.begin;
++  h.audio.begin = (...args) => { begins++; if (begins > 1) return begin(...args); oldEvent = args[2]; return new Promise(resolve => { resolveOld = resolve; }); };
++  h.session.activate('button'); await flush(); h.session.activate('button'); await flush(); h.session.activate('button'); await flush();
++  assert.equal(begins, 2); assert.equal(h.playback.state.status, 'playing');
++  resolveOld({ stop() { stopped++; }, getPositionSeconds: () => 0 }); await flush(); oldEvent({ type: 'ended' });
++  assert.equal(stopped, 1); assert.equal(h.playback.state.status, 'playing'); assert.equal(h.tasks.size, 1); h.playback.stop();
++});
+diff --git a/tests/native-playback.test.ts b/tests/native-playback.test.ts
+index c34baa1..0f4b75d 100644
+--- a/tests/native-playback.test.ts
++++ b/tests/native-playback.test.ts
+@@ -81,3 +81,16 @@ test('native adapters wait for a positive duration even when the loaded flag arr
+     if ('value' in result && result.value && 'stop' in result.value) result.value.stop();
+   }
+ });
++
++test('native position follows confirmed statuses, holds during buffering and ignores invalid or late values', async () => {
++  const h = harness();
++  const handle = await beginNativePlayback(h.player, { start: 1, end: 2.5 }, () => {}, new AbortController().signal, h.clock);
++  const read = () => (handle as { getPositionSeconds?: () => number }).getPositionSeconds?.();
++  assert.equal(read(), 1);
++  h.emit({ currentTime: 1.4 }); assert.equal(read(), 1.4);
++  h.emit({ currentTime: 1.8, isBuffering: true, playing: false }); assert.equal(read(), 1.4);
++  h.emit({ currentTime: NaN, isBuffering: false, playing: true }); assert.equal(read(), 1.4);
++  h.emit({ currentTime: Infinity }); assert.equal(read(), 1.4); assert.equal(h.counters().removed, 0, 'invalid status time must not falsely end playback');
++  h.emit({ currentTime: -4 }); assert.equal(read(), 1);
++  h.emit({ currentTime: 1.7 }); handle.stop(); h.emit({ currentTime: 2.1 }); assert.equal(read(), 1.7);
++});
+diff --git a/tests/playback.test.ts b/tests/playback.test.ts
+index 2674b33..dd59692 100644
+--- a/tests/playback.test.ts
++++ b/tests/playback.test.ts
+@@ -8,26 +8,29 @@ const second = { ...sound, id: 'b', assetKey: 'b.wav' };
+ function deferred<T>() { let resolve!: (value: T) => void; const promise = new Promise<T>(done => { resolve = done; }); return { promise, resolve }; }
+ const tick = () => new Promise(resolve => setImmediate(resolve));
+ function harness() {
+-  const calls: { signal: AbortSignal; event: (event: PlaybackEvent) => void; stopped: boolean; range: {start: number; end: number} }[] = [];
++  const calls: { signal: AbortSignal; event: (event: PlaybackEvent) => void; stopped: boolean; range: {start: number; end: number}; position: number; readError?: boolean }[] = [];
+   const audio: AudioPlayback = {
+     unlockFromGesture: async () => {},
+     begin: async (_asset, range, event, signal) => {
+-      const call = { range, event, signal, stopped: false }; calls.push(call);
+-      return { stop: () => { call.stopped = true; } };
++      const call = { range, event, signal, stopped: false, position: range.start, readError: false }; calls.push(call);
++      return { getPositionSeconds: () => { if (call.readError) throw Error('clock'); return call.position; }, stop: () => { call.stopped = true; } };
+     },
+   };
+-  const playback = new Playback({ resolve: async () => ({ source: 'local' }) }, audio);
+-  return { audio, playback, calls };
++  const tasks = new Map<number, () => void>(); let next = 0;
++  const clock = { set(callback: () => void) { tasks.set(++next, callback); return next; }, clear(token: unknown) { tasks.delete(token as number); } };
++  const playback = new Playback({ resolve: async () => ({ source: 'local' }) }, audio, clock);
++  const poll = () => { const [id, callback] = [...tasks][0]; tasks.delete(id); callback(); };
++  return { audio, playback, calls, tasks, clock, poll };
+ }
+ test('a second activation owns playback while an earlier delayed handle is stopped', async () => {
+   const { audio, playback } = harness();
+   const firstHandle = deferred<PlaybackHandle>(); let begins = 0, stoppedFirst = 0;
+   const signals: AbortSignal[] = [];
+-  audio.begin = async (_asset, _range, _event, signal) => { signals.push(signal); return ++begins === 1 ? firstHandle.promise : { stop() {} }; };
++  audio.begin = async (_asset, _range, _event, signal) => { signals.push(signal); return ++begins === 1 ? firstHandle.promise : { stop() {}, getPositionSeconds: () => 1 }; };
+   const firstStart = playback.play(sound); await tick();
+   await playback.play(second); assert.equal(playback.state.soundId, 'b');
+   assert.equal(signals[0].aborted, true);
+-  firstHandle.resolve({ stop() { stoppedFirst++; } }); await firstStart;
++  firstHandle.resolve({ stop() { stoppedFirst++; }, getPositionSeconds: () => 1 }); await firstStart;
+   assert.equal(stoppedFirst, 1); assert.equal(playback.state.soundId, 'b'); assert.equal(playback.state.status, 'playing');
+ });
+ test('restarting the same sound stops the prior handle and uses saved or preview ranges', async () => {
+@@ -64,5 +67,48 @@ test('missing assets and start errors are visible and do not prevent later playb
+   assert.equal(playback.state.status, 'error');
+   const missing = new Playback({ resolve: async () => { throw Error('missing'); } }, audio);
+   await missing.play(sound); assert.equal(missing.state.status, 'error');
+-  audio.begin = async () => ({ stop() {} }); await playback.play(second); assert.equal(playback.state.status, 'playing');
++  audio.begin = async () => ({ stop() {}, getPositionSeconds: () => 1 }); await playback.play(second); assert.equal(playback.state.status, 'playing');
++});
++
++test('service publishes absolute engine positions only while playing and bounds invalid readings', async () => {
++  const h = harness(); const seen: unknown[] = []; h.playback.subscribe(state => seen.push(state));
++  await h.playback.play(sound);
++  assert.equal(h.playback.state.positionSeconds, 1);
++  assert.equal(h.tasks.size, 1);
++  h.calls[0].position = 1.6; h.poll(); assert.equal(h.playback.state.positionSeconds, 1.6);
++  const count = seen.length; h.poll(); assert.equal(seen.length, count);
++  h.calls[0].position = NaN; h.poll(); assert.equal(h.playback.state.positionSeconds, 1.6);
++  h.calls[0].position = Infinity; h.poll(); assert.equal(h.playback.state.positionSeconds, 1.6);
++  h.calls[0].position = -1; h.poll(); assert.equal(h.playback.state.positionSeconds, 1);
++  h.calls[0].position = 4; h.poll(); assert.equal(h.playback.state.positionSeconds, 2);
++  h.playback.stop(); assert.equal(h.playback.state.positionSeconds, undefined); assert.equal(h.tasks.size, 0);
++});
++test('loading has no timer; terminal and stale callbacks cannot recreate positions or polling', async () => {
++  const h = harness(); const delayed = deferred<PlaybackHandle>(); h.audio.begin = () => delayed.promise;
++  const pending = h.playback.play(sound); await tick();
++  assert.equal(h.playback.state.positionSeconds, undefined); assert.equal(h.tasks.size, 0);
++  h.playback.stop(); delayed.resolve({ stop() {}, getPositionSeconds: () => 1.5 }); await pending;
++  assert.equal(h.tasks.size, 0);
++  for (const type of ['ended', 'interrupted', 'error', 'stop'] as const) {
++    const h = harness(); await h.playback.play(sound); const stale = [...h.tasks.values()][0];
++    if (type === 'stop') h.playback.stop();
++    else h.calls[0].event(type === 'error' ? { type, message: 'bad' } : { type });
++    assert.equal(h.playback.state.positionSeconds, undefined); assert.equal(h.tasks.size, 0);
++    await h.playback.play(second); const current = h.playback.state;
++    stale(); assert.equal(h.playback.state, current); assert.equal(h.tasks.size, 1); h.playback.stop();
++  }
++});
++test('synchronous subscriber stop and throwing position reads leave no resources', async () => {
++  const h = harness(); h.playback.subscribe(state => { if (state.status === 'playing') h.playback.stop(); });
++  await h.playback.play(sound); assert.equal(h.tasks.size, 0); assert.equal(h.calls[0].stopped, true);
++  const next = harness(); await next.playback.play(sound); next.calls[0].readError = true; next.poll();
++  assert.equal(next.playback.state.status, 'error'); assert.ok(next.playback.state.message);
++  assert.equal(next.playback.state.positionSeconds, undefined); assert.equal(next.tasks.size, 0); assert.equal(next.calls[0].stopped, true);
++});
++test('terminal event before handle adoption and repeated starts never retain polling', async () => {
++  const h = harness(); let stopped = 0;
++  h.audio.begin = async (_asset, _range, event) => { event({ type: 'ended' }); return { stop() { stopped++; }, getPositionSeconds: () => 1 }; };
++  await h.playback.play(sound); assert.equal(h.playback.state.status, 'idle'); assert.equal(stopped, 1); assert.equal(h.tasks.size, 0);
++  const next = harness();
++  for (let index = 0; index < 12; index++) { await next.playback.play(sound); assert.equal(next.tasks.size, 1); next.playback.stop(); assert.equal(next.tasks.size, 0); }
+ });
+diff --git a/tests/web-audio.test.ts b/tests/web-audio.test.ts
+index 5474662..109db77 100644
+--- a/tests/web-audio.test.ts
++++ b/tests/web-audio.test.ts
+@@ -8,7 +8,7 @@ class FakeSource {
+ }
+ class FakeContext extends EventTarget {
+   static latest: FakeContext;
+-  state = 'suspended'; destination = {}; sources: FakeSource[] = []; resumes = 0;
++  currentTime = 8; state = 'suspended'; destination = {}; sources: FakeSource[] = []; resumes = 0;
+   constructor() { super(); FakeContext.latest = this; }
+   resume() { this.resumes++; this.state = 'running'; return Promise.resolve(); }
+   async decodeAudioData() { return { duration: 3 }; }
+@@ -42,3 +42,14 @@ test('aborted web decode creates no playing source', async () => {
+   await assert.rejects(audio.begin(asset, { start: 0, end: 2 }, () => {}, abort.signal));
+   assert.equal(FakeContext.latest.sources.length, 0);
+ });
++
++test('web positions use absolute engine time, clamp, and freeze after cleanup', async () => {
++  const audio = new LocalAudio(); await audio.unlockFromGesture();
++  const handle = await audio.begin(asset, { start: 1, end: 2 }, () => {}, new AbortController().signal);
++  const read = () => (handle as { getPositionSeconds?: () => number }).getPositionSeconds?.();
++  assert.equal(read(), 1);
++  FakeContext.latest.currentTime = 8.25; assert.equal(read(), 1.25);
++  FakeContext.latest.currentTime = 20; assert.equal(read(), 2);
++  FakeContext.latest.currentTime = 8.5; handle.stop();
++  FakeContext.latest.currentTime = 30; assert.equal(read(), 1.5);
++});
+diff --git a/scripts/playback-indicator-smoke.mjs b/scripts/playback-indicator-smoke.mjs
+new file mode 100644
+index 0000000..1e18333
+--- /dev/null
++++ b/scripts/playback-indicator-smoke.mjs
+@@ -0,0 +1,133 @@
++import { chromium } from 'playwright';
++import assert from 'node:assert/strict';
++import fs from 'node:fs/promises';
++const run = process.env.SOUNDBOARD_EVIDENCE_DIR ?? 'workflow-artifacts/2026-10-20-playback-indicator-toggle';
++await fs.mkdir(run, { recursive: true });
++// A dedicated four-second fixture leaves enough time for two UI samples and screenshots.
++const rate = 44100, frames = rate * 4, wav = Buffer.alloc(44 + frames * 2);
++wav.write('RIFF'); wav.writeUInt32LE(wav.length - 8, 4); wav.write('WAVEfmt ', 8); wav.writeUInt32LE(16, 16); wav.writeUInt16LE(1, 20); wav.writeUInt16LE(1, 22); wav.writeUInt32LE(rate, 24); wav.writeUInt32LE(rate * 2, 28); wav.writeUInt16LE(2, 32); wav.writeUInt16LE(16, 34); wav.write('data', 36); wav.writeUInt32LE(frames * 2, 40);
++for (let index = 0; index < frames; index++) wav.writeInt16LE(Math.round(6000 * Math.sin(2 * Math.PI * 440 * index / rate)), 44 + index * 2);
++await fs.writeFile(`${run}/indicator-tone.wav`, wav);
++const browser = await chromium.launch({ headless: true, channel: 'chrome' });
++const page = await browser.newPage({ viewport: { width: 1024, height: 1000 }, hasTouch: true });
++const errors = []; page.on('pageerror', error => errors.push(error.message));
++await page.addInitScript(() => {
++  window.__positionAudio = { starts: [], maxActive: 0, active: [] };
++  window.__positionContexts = [];
++  const create = AudioContext.prototype.createBufferSource;
++  AudioContext.prototype.createBufferSource = function () {
++    const context = this, source = create.call(this), start = source.start.bind(source), stop = source.stop.bind(source), disconnect = source.disconnect.bind(source);
++    const evidence = window.__positionAudio;
++    const contextId = window.__positionContexts.push(context) - 1;
++    let id;
++    const release = () => { evidence.active = evidence.active.filter(active => active !== id); };
++    source.start = (when = 0, offset = 0, duration) => {
++      id = evidence.starts.length;
++      evidence.starts.push({ id, contextId, clock: context.currentTime, offset, duration });
++      evidence.active.push(id); evidence.maxActive = Math.max(evidence.maxActive, evidence.active.length);
++      return start(when, offset, duration);
++    };
++    source.stop = (...args) => { release(); return stop(...args); };
++    source.disconnect = (...args) => { release(); return disconnect(...args); };
++    source.addEventListener('ended', release);
++    return source;
++  };
++});
++const click = name => page.getByRole('button', { name, exact: true }).click();
++const start = () => page.getByRole('textbox', { name: 'Start in Sekunden' });
++const end = () => page.getByRole('textbox', { name: 'Ende in Sekunden' });
++const marker = () => page.getByTestId('playback-position-marker');
++const position = () => page.getByTestId('playback-position-text');
++const audio = () => page.evaluate(() => window.__positionAudio);
++const edit = () => click('tone.wav Ausschnitt bearbeiten, Sound 1');
++async function preview() {
++  const before = (await audio()).starts.length; await click('▶ Vorschau starten');
++  await page.waitForFunction(count => window.__positionAudio.starts.length > count, before);
++  await page.getByText('Vorschau läuft …', { exact: true }).waitFor();
++}
++async function inactive() {
++  await page.waitForFunction(() => !document.querySelector('[data-testid="playback-position-marker"]'));
++  assert.equal(await position().count(), 0); assert.equal((await audio()).active.length, 0);
++  await page.waitForTimeout(120); assert.equal(await marker().count(), 0);
++}
++async function sample() {
++  return page.evaluate(() => {
++    const text = document.querySelector('[data-testid="playback-position-text"]'), marker = document.querySelector('[data-testid="playback-position-marker"]'), track = document.querySelector('[data-testid="trim-timeline"]');
++    const value = Number(text.textContent.match(/([\d.,]+) s/)[1].replace(',', '.'));
++    const box = marker.getBoundingClientRect(), bar = track.getBoundingClientRect();
++    const record = window.__positionAudio.starts.at(-1);
++    return { seconds: value, fraction: (box.x + box.width / 2 - bar.x) / bar.width, engineSeconds: record.offset + window.__positionContexts[record.contextId].currentTime - record.clock, box: { x: box.x, y: box.y, width: box.width, height: box.height }, track: { x: bar.x, y: bar.y, width: bar.width }, liveRegion: !!text.closest('[aria-live]') };
++  });
++}
++async function measuredPreview(width, screenshot) {
++  await page.setViewportSize({ width, height: width === 390 ? 1000 : 1100 });
++  await start().fill('1'); await end().fill('2.8'); await preview();
++  // Count assertion makes the pre-UI Red an absent feature, after proven actual engine start.
++  assert.equal(await position().count(), 1, 'playing preview must expose an absolute current position');
++  await page.waitForTimeout(120); const first = await sample();
++  await page.waitForTimeout(220); const second = await sample();
++  assert.ok(first.seconds >= 1 && second.seconds > first.seconds && second.seconds <= 2.8);
++  for (const item of [first, second]) {
++    assert.ok(Math.abs(item.seconds - item.engineSeconds) < 0.2, `engine/UI scheduler tolerance: ${JSON.stringify(item)}`);
++    assert.ok(Math.abs(item.fraction - item.seconds / 4) < 0.01, 'marker uses full file duration');
++    assert.equal(item.liveRegion, false, 'changing position has no live announcements');
++    assert.ok(item.box.x >= item.track.x && item.box.x + item.box.width <= item.track.x + item.track.width + 1);
++  }
++  assert.equal((await audio()).starts.at(-1).offset, 1); assert.ok(Math.abs((await audio()).starts.at(-1).duration - 1.8) < 1e-8);
++  for (const locator of [start(), end(), page.getByTestId('trim-timeline'), page.getByRole('button', { name: '▶ Vorschau starten', exact: true })]) {
++    const box = await locator.boundingBox(); assert.ok(box.x >= 0 && box.x + box.width <= width + 1, 'controls within viewport');
++  }
++  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
++  await page.screenshot({ path: `${run}/${screenshot}`, fullPage: true });
++  return { first, second };
++}
++async function stored() {
++  return page.evaluate(() => new Promise(resolve => {
++    const request = indexedDB.open('local-soundboard', 1);
++    request.onsuccess = () => { const db = request.result, tx = db.transaction('state'), read = tx.objectStore('state').get('library'); tx.oncomplete = () => { db.close(); resolve(JSON.parse(read.result)); }; };
++  }));
++}
++async function createBoard(name) { await click('+ Neues Board'); await page.getByRole('textbox', { name: 'Boardname' }).fill(name); await click('Board erstellen'); await page.getByRole('textbox', { name: 'Boardname' }).waitFor({ state: 'hidden' }); }
++async function createButton(name) { await click('+ Button hinzufügen'); await page.getByRole('textbox', { name: 'Beschriftung', exact: true }).fill(name); await click('Button erstellen'); await page.getByRole('textbox', { name: 'Beschriftung', exact: true }).waitFor({ state: 'hidden' }); }
++async function padStart(name, method = 'click') {
++  const count = (await audio()).starts.length; const pad = page.getByRole('button', { name: `${name} abspielen`, exact: true });
++  if (method === 'Enter' || method === 'Space') { await pad.focus(); await pad.press(method); } else await pad[method]();
++  await page.waitForFunction(count => window.__positionAudio.starts.length === count + 1, count);
++}
++async function padStop(name, method = 'click') {
++  const count = (await audio()).starts.length; const pad = page.getByRole('button', { name: `${name} abspielen`, exact: true });
++  if (method === 'Enter' || method === 'Space') { await pad.focus(); await pad.press(method); } else await pad[method]();
++  await page.waitForFunction(() => window.__positionAudio.active.length === 0);
++  assert.equal((await audio()).starts.length, count, 'second activation stops without another source start');
++}
++try {
++  await page.goto(process.env.SOUNDBOARD_URL ?? 'http://localhost:8082');
++  const chooser = page.waitForEvent('filechooser'); await click('+ Sound importieren'); await (await chooser).setFiles({ name: 'tone.wav', mimeType: 'audio/wav', buffer: wav });
++  await page.getByText('tone.wav', { exact: true }).waitFor(); await edit();
++  const desktop = await measuredPreview(1024, 'indicator-desktop-active.png');
++  await click('Stopp'); await inactive();
++  await preview(); await start().fill('1.1'); await inactive();
++  await preview(); await click('Auf volle Datei zurücksetzen'); await inactive(); assert.equal(await start().inputValue(), '0');
++  await start().fill(''); assert.equal(await page.getByRole('button', { name: '▶ Vorschau starten', exact: true }).isDisabled(), true);
++  await start().fill('1'); await end().fill('2.8'); await preview(); await click('Abbrechen'); await inactive();
++  assert.equal((await stored()).sounds[0].trimStartSeconds, 0, 'cancel and previews never save drafts'); await edit();
++  const mobile = await measuredPreview(390, 'indicator-mobile-390-active.png');
++  await page.waitForFunction(() => window.__positionAudio.active.length === 0); await inactive();
++  await preview(); await click('Ausschnitt speichern'); await inactive();
++  assert.equal((await stored()).sounds[0].trimStartSeconds, 1);
++  await edit(); await preview(); await page.reload(); await inactive(); await edit();
++  assert.equal(await start().inputValue(), '1'); assert.equal(await end().inputValue(), '2.8'); await click('Abbrechen');
++  await createBoard('Bühne'); await createButton('A'); await createButton('B'); await click('Abspielen');
++  await padStart('A'); await padStop('A'); await padStart('A'); await padStart('B');
++  assert.equal((await audio()).active.length, 1); assert.equal((await audio()).starts.at(-1).offset, 1); await padStop('B');
++  await padStart('A', 'Enter'); await padStop('A', 'Space');
++  await padStart('A', 'tap'); await padStop('A', 'tap');
++  await padStart('A'); await click('Wiedergabe stoppen'); assert.equal((await audio()).active.length, 0);
++  await padStart('A'); await click('Bearbeiten'); assert.equal((await audio()).active.length, 0);
++  const beforeEdit = (await audio()).starts.length; await click('A bearbeiten'); await click('Abbrechen'); assert.equal((await audio()).starts.length, beforeEdit);
++  await createBoard('Nebenraum'); await click('Board Bühne, 1'); await click('Abspielen'); await padStart('A'); await click('Board Nebenraum, 2'); assert.equal((await audio()).active.length, 0);
++  await click('Board Bühne, 1'); await padStart('A'); await page.waitForFunction(() => window.__positionAudio.active.length === 0); await padStart('A'); await padStop('A');
++  const board = await audio(); assert.equal(board.maxActive, 1); assert.deepEqual(errors, []);
++  const report = { result: 'PASS', browser: browser.version(), schedulerToleranceSeconds: 0.2, desktop, mobile, board, checks: 'absolute nonzero trim; progressing text/marker; engine clock and full-file geometry; stop/end/change/reset/cancel/save/reload cleanup; invalid draft; explicit preview unchanged draft; same/different boardbutton; keyboard Enter/Space; touch; global/mode/board stop', limitations: 'Headless Chrome is silent; no physical iPhone/iPad or Safari execution. Native status/clock tests and iOS export cover contract/bundling only.' };
++  await fs.writeFile(`${run}/indicator-browser-evidence.json`, JSON.stringify(report, null, 2)); console.log(JSON.stringify(report, null, 2));
++} finally { await browser.close(); }

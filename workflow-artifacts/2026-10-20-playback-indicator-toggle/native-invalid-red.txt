@@ -1,0 +1,37 @@
+✔ native playback seeks first and schedules the endpoint only after actual playing status (3.796542ms)
+✔ abort during native seek removes the player and never calls play later (0.701417ms)
+✔ buffering clears the timer; resume recomputes remaining duration and endpoint cleans all resources (0.231167ms)
+✔ native pause/interruption, errors and observed endpoint stop without automatic resume (0.239833ms)
+✔ native load timeout rejects visibly and clears subscriptions and timers (0.507167ms)
+✔ native listener setup failure releases the player and startup timer (0.1365ms)
+✔ native inspection cleans its player and listeners without starting playback (0.144166ms)
+✔ native inspection setup error leaves no delayed timer callback or retained player (0.078417ms)
+✔ native adapters wait for a positive duration even when the loaded flag arrives first (0.802167ms)
+✖ native position follows confirmed statuses, holds during buffering and ignores invalid or late values (0.908917ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 9
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 129.137542
+
+✖ failing tests:
+
+test at tests/native-playback.test.ts:85:1
+✖ native position follows confirmed statuses, holds during buffering and ignores invalid or late values (0.908917ms)
+  AssertionError [ERR_ASSERTION]: invalid status time must not falsely end playback
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///Users/marv/Projects/soundboard/tests/native-playback.test.ts:93:72)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

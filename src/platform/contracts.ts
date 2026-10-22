@@ -14,7 +14,7 @@ export interface Repository {
 export interface AudioInspector { inspect(asset: PlayableAsset): Promise<{ durationSeconds: number }> }
 export interface Picker { pick(): Promise<PickedFile | null> }
 export type PlaybackEvent = { type: 'ended' | 'interrupted' } | { type: 'error'; message: string };
-export type PlaybackHandle = { stop(): void };
+export type PlaybackHandle = { stop(): void; getPositionSeconds(): number };
 export interface AudioPlayback {
   unlockFromGesture(): Promise<void>;
   begin(asset: PlayableAsset, range: AudioRange, onEvent: (event: PlaybackEvent) => void, signal: AbortSignal): Promise<PlaybackHandle>;

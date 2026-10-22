@@ -16,7 +16,10 @@ export function SoundEditor({ sound, unavailable, readOnly, onReload, playbackSt
   const [error, setError] = useState(''); const [saving, setSaving] = useState(false);
   let range: AudioRange | undefined; let validationError = '';
   try { range = rangeFromDraft(draft, sound.durationSeconds); } catch (failure) { validationError = errorMessage(failure); }
-  const active = playbackState.status === 'playing' || playbackState.status === 'loading';
+  const active = playbackState.soundId === sound.id && (playbackState.status === 'playing' || playbackState.status === 'loading');
+  const position = playbackState.status === 'playing' && playbackState.soundId === sound.id && Number.isFinite(playbackState.positionSeconds)
+    ? Math.max(0, Math.min(sound.durationSeconds, playbackState.positionSeconds!)) : undefined;
+  const positionFraction = position === undefined ? 0 : position / sound.durationSeconds;
   const close = () => { if (!saving) { onStop(); onClose(); } };
   function change(field: 'startText' | 'endText', text: string) {
     onStop(); setError(''); setDraft(previous => ({ ...previous, [field]: text }));
@@ -43,9 +46,11 @@ export function SoundEditor({ sound, unavailable, readOnly, onReload, playbackSt
             </View>)}
           </View>
           <View style={{ gap: 10 }}>
-            <View style={{ height: 18, borderRadius: 9, backgroundColor: '#e6eae3', overflow: 'hidden' }}>
+            <View testID="trim-timeline" style={{ height: 18, borderRadius: 9, backgroundColor: '#e6eae3', overflow: 'hidden' }}>
               {range && <View style={{ position: 'absolute', height: '100%', left: `${range.start / sound.durationSeconds * 100}%`, width: `${(range.end - range.start) / sound.durationSeconds * 100}%`, backgroundColor: colors.accent }} />}
+              {position !== undefined && <View testID="playback-position-marker" style={{ position: 'absolute', height: '100%', width: 4, left: `${positionFraction * 100}%`, marginLeft: -4 * positionFraction, backgroundColor: '#fff', borderLeftWidth: 1, borderRightWidth: 1, borderColor: colors.ink }} />}
             </View>
+            {position !== undefined && <Text testID="playback-position-text" style={[styles.body, { fontWeight: '600', fontVariant: ['tabular-nums'] }]}>Wiedergabeposition: {position.toFixed(3)} s</Text>}
             <Text style={styles.body}>{range ? `Auswahl: ${range.start.toFixed(3)}–${range.end.toFixed(3)} s · ${(range.end - range.start).toFixed(3)} s Länge` : 'Auswahl ungültig'}</Text>
           </View>
           {!!(validationError || error) && <View accessibilityRole="alert" style={styles.notice}><Text style={styles.noticeText}>{error || validationError}</Text></View>}

@@ -1,0 +1,13 @@
+{
+  "browser": "155.0.8059.86",
+  "result": "PASS: 12 real buttons, 1024/390px, create/edit/delete/assignment/layout/trim/reload, collision preservation, keyboard focus/Enter/Space/Tab, touch, board switch stop, last elements and sounds retained",
+  "persisted": "12 buttons + second board persisted and compared after reload",
+  "mobileBoxes": "12 measured boxes",
+  "keyboardFocusColor": "rgb(34, 40, 38)",
+  "tabTarget": {
+    "role": "button",
+    "label": "Board Bühne, 1"
+  },
+  "finalBoardCount": 0,
+  "finalSoundCount": 2
+}

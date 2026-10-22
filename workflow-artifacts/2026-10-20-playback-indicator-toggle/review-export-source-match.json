@@ -1,0 +1,50 @@
+[
+  {
+    "platform": "web",
+    "map": "dist/web/_expo/static/js/web/index-581d2c50f51f415e532e601affea1ccc.js.map",
+    "target": "src/platform/audio.web.ts",
+    "matchesWorkspace": true
+  },
+  {
+    "platform": "web",
+    "map": "dist/web/_expo/static/js/web/index-581d2c50f51f415e532e601affea1ccc.js.map",
+    "target": "src/services/playback.ts",
+    "matchesWorkspace": true
+  },
+  {
+    "platform": "web",
+    "map": "dist/web/_expo/static/js/web/index-581d2c50f51f415e532e601affea1ccc.js.map",
+    "target": "src/services/board-session.ts",
+    "matchesWorkspace": true
+  },
+  {
+    "platform": "web",
+    "map": "dist/web/_expo/static/js/web/index-581d2c50f51f415e532e601affea1ccc.js.map",
+    "target": "src/ui/SoundEditor.tsx",
+    "matchesWorkspace": true
+  },
+  {
+    "platform": "ios",
+    "map": "dist/ios/_expo/static/js/ios/index-9857286a1901be4b7fefe9dc4c645dd6.hbc.map",
+    "target": "src/platform/native-playback.ts",
+    "matchesWorkspace": true
+  },
+  {
+    "platform": "ios",
+    "map": "dist/ios/_expo/static/js/ios/index-9857286a1901be4b7fefe9dc4c645dd6.hbc.map",
+    "target": "src/services/board-session.ts",
+    "matchesWorkspace": true
+  },
+  {
+    "platform": "ios",
+    "map": "dist/ios/_expo/static/js/ios/index-9857286a1901be4b7fefe9dc4c645dd6.hbc.map",
+    "target": "src/services/playback.ts",
+    "matchesWorkspace": true
+  },
+  {
+    "platform": "ios",
+    "map": "dist/ios/_expo/static/js/ios/index-9857286a1901be4b7fefe9dc4c645dd6.hbc.map",
+    "target": "src/ui/SoundEditor.tsx",
+    "matchesWorkspace": true
+  }
+]

@@ -1,0 +1,69 @@
+✔ a second activation owns playback while an earlier delayed handle is stopped (4.183875ms)
+✔ restarting the same sound stops the prior handle and uses saved or preview ranges (1.271208ms)
+✔ stop during delayed asset resolution prevents begin (0.931292ms)
+✔ end, interruption and error events clean the handle and old events cannot affect a new start (0.357708ms)
+✔ gesture unlock happens synchronously; rejection is visible and next activation recovers (0.217167ms)
+✔ missing assets and start errors are visible and do not prevent later playback (0.156166ms)
+✖ service publishes absolute engine positions only while playing and bounds invalid readings (1.328625ms)
+✖ loading has no timer; terminal and stale callbacks cannot recreate positions or polling (3.649875ms)
+✖ synchronous subscriber stop and throwing position reads leave no resources (0.464709ms)
+✖ terminal event before handle adoption and repeated starts never retain polling (0.292666ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 6
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 164.385041
+
+✖ failing tests:
+
+test at tests/playback.test.ts:73:1
+✖ service publishes absolute engine positions only while playing and bounds invalid readings (1.328625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 1
+  
+      at TestContext.<anonymous> (file:///Users/marv/Projects/soundboard/tests/playback.test.ts:76:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/playback.test.ts:86:1
+✖ loading has no timer; terminal and stale callbacks cannot recreate positions or polling (3.649875ms)
+  TypeError [Error]: stale is not a function
+      at TestContext.<anonymous> (file:///Users/marv/Projects/soundboard/tests/playback.test.ts:98:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/playback.test.ts:101:1
+✖ synchronous subscriber stop and throwing position reads leave no resources (0.464709ms)
+  TypeError [Error]: undefined is not iterable (cannot read property Symbol(Symbol.iterator))
+      at Object.poll (file:///Users/marv/Projects/soundboard/tests/playback.test.ts:22:47)
+      at TestContext.<anonymous> (file:///Users/marv/Projects/soundboard/tests/playback.test.ts:104:97)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/playback.test.ts:108:1
+✖ terminal event before handle adoption and repeated starts never retain polling (0.292666ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///Users/marv/Projects/soundboard/tests/playback.test.ts:113:86)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

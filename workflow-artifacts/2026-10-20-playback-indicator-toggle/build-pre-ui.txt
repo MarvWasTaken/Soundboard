@@ -1,0 +1,23 @@
+
+> soundboard@1.0.0 build:web
+> expo export --platform web --output-dir dist/web --source-maps
+
+Starting Metro Bundler
+
+| (node:29074) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:29074) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+| (node:29074) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+| (Use `node --trace-warnings ...` to show where the warning was created)
+Web Bundled 571ms index.ts (228 modules)
+
+› web bundles (2):
+_expo/static/js/web/index-a213a1f9a22057cb313e0a4efe1f8c6f.js (470KB)
+_expo/static/js/web/index-a213a1f9a22057cb313e0a4efe1f8c6f.js.map (2.1MB)
+
+› Files (2):
+index.html (1.2KB)
+metadata.json (49B)
+
+Exported: dist/web

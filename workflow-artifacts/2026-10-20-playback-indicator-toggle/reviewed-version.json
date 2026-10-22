@@ -1,0 +1,64 @@
+{
+  "capturedAt": "2026-10-22T08:57:05.047Z",
+  "baseline": "a85907f30c80036fe1754e81540f21e77cf11a5a",
+  "head": "a85907f30c80036fe1754e81540f21e77cf11a5a",
+  "diffSha256": "ca17cea9a7c89f047ac698bcace3983f46c8ede0fd669e672469af01df067723",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "edeb8f56533f463a55fec69310016acf61b28109d734db36c81e31e363fbb525"
+    },
+    {
+      "path": "scripts/board-smoke.mjs",
+      "sha256": "410fc5b56e78b7d779c775732eef6a4d6c21d5b41cb36035af1130469d11dcbf"
+    },
+    {
+      "path": "scripts/playback-indicator-smoke.mjs",
+      "sha256": "ee7af073cb5da498437ae7bb5f47914034ed5128934b94c50dbbce4b1ab6afd4"
+    },
+    {
+      "path": "scripts/playback-smoke.mjs",
+      "sha256": "5f66666f6cf169e59750996d14795726816ccd63b4f1b63e0c798754bef2f25b"
+    },
+    {
+      "path": "src/platform/audio.web.ts",
+      "sha256": "e7c1f9f05a607a47e607390761dbf52a0780f72b8b0ce9c788e7d015d5d8bcc3"
+    },
+    {
+      "path": "src/platform/contracts.ts",
+      "sha256": "6095dbf4a9baea8f713270b4b0cdcffb4d589747a6c4732063c66df066634f93"
+    },
+    {
+      "path": "src/platform/native-playback.ts",
+      "sha256": "31ebb5b7bf3ce121650d4279161030e5b82fa5c50f40950f3cd81ac8fabdaa69"
+    },
+    {
+      "path": "src/services/board-session.ts",
+      "sha256": "4fd0407a6c3355f03f5d03c0f738915cc2275471babc8264c600639e2393f9be"
+    },
+    {
+      "path": "src/services/playback.ts",
+      "sha256": "163cb0a9782f9aa38693bdf54ea36cc82a8dbac81b3867fcaf5f6912d45248eb"
+    },
+    {
+      "path": "src/ui/SoundEditor.tsx",
+      "sha256": "75e4205aae67d353eb7615370a48a11d1c7d6775904474ad3a9d572a18c47d8e"
+    },
+    {
+      "path": "tests/board-session.test.ts",
+      "sha256": "597071a38626acc12dc1cf1df63c96351a28be0f2c95f0d9f8abb847eff29e8d"
+    },
+    {
+      "path": "tests/native-playback.test.ts",
+      "sha256": "15acc3d4af52cc1c784d88721081c83a3a36caeda1fe637a7ae612b5a84750ef"
+    },
+    {
+      "path": "tests/playback.test.ts",
+      "sha256": "7da7e74a8d5f27dc60ed59b9d9bfebb3279b71a7f4c47aa8c343969dca8be2c6"
+    },
+    {
+      "path": "tests/web-audio.test.ts",
+      "sha256": "b2aa82e2493ca560d75888891098b78352271d8cd255b2c07e74d01ffeeb3a58"
+    }
+  ]
+}

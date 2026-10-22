@@ -21,9 +21,18 @@ export class LocalAudio {
     validateRange(range, buffer.duration);
     const source = context.createBufferSource(); source.buffer = buffer;
     let finished = false;
+    const origin = context.currentTime;
+    let position = range.start;
+    const getPositionSeconds = () => {
+      if (!finished) {
+        const measured = range.start + context.currentTime - origin;
+        if (Number.isFinite(measured)) position = Math.max(range.start, Math.min(range.end, measured));
+      }
+      return position;
+    };
     const finish = (event?: PlaybackEvent) => {
       if (finished) return;
-      finished = true; source.onended = null;
+      getPositionSeconds(); finished = true; source.onended = null;
       signal.removeEventListener('abort', abort); context.removeEventListener('statechange', stateChanged);
       try { source.stop(); } catch { /* A naturally ended node is already stopped. */ }
       source.disconnect(); if (event) onEvent(event);
@@ -37,7 +46,7 @@ export class LocalAudio {
       // Offset and duration are enforced by the audio engine, independent of JS timers.
       source.start(0, range.start, range.end - range.start);
     } catch { finish(); throw new AppError('playback', 'Der Sound konnte nicht gestartet werden. Bitte erneut versuchen.'); }
-    return { stop: () => finish() };
+    return { stop: () => finish(), getPositionSeconds };
   }
   async inspect(asset: PlayableAsset) {
     const buffer = await this.decode(asset);

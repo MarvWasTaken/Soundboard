@@ -1,0 +1,59 @@
+✔ native playback seeks first and schedules the endpoint only after actual playing status (6.370875ms)
+✔ abort during native seek removes the player and never calls play later (0.948709ms)
+✔ buffering clears the timer; resume recomputes remaining duration and endpoint cleans all resources (0.33175ms)
+✔ native pause/interruption, errors and observed endpoint stop without automatic resume (0.301792ms)
+✔ native load timeout rejects visibly and clears subscriptions and timers (0.660083ms)
+✔ native listener setup failure releases the player and startup timer (0.146792ms)
+✔ native inspection cleans its player and listeners without starting playback (0.1985ms)
+✔ native inspection setup error leaves no delayed timer callback or retained player (0.105875ms)
+✔ native adapters wait for a positive duration even when the loaded flag arrives first (0.9185ms)
+✖ native position follows confirmed statuses, holds during buffering and ignores invalid or late values (0.892708ms)
+✔ web engine unlocks immediately and starts with an audio-clock offset and duration (1.541083ms)
+✔ web ended and stop release nodes once and remove old state listeners (0.407167ms)
+✔ suspended web context interrupts and cleans the active source (0.469375ms)
+✔ aborted web decode creates no playing source (1.169ms)
+✖ web positions use absolute engine time, clamp, and freeze after cleanup (2.257833ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 13
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 198.657417
+
+✖ failing tests:
+
+test at tests/native-playback.test.ts:85:1
+✖ native position follows confirmed statuses, holds during buffering and ignores invalid or late values (0.892708ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 1
+  
+      at TestContext.<anonymous> (file:///Users/marv/Projects/soundboard/tests/native-playback.test.ts:89:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/web-audio.test.ts:46:1
+✖ web positions use absolute engine time, clamp, and freeze after cleanup (2.257833ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 1
+  
+      at TestContext.<anonymous> (file:///Users/marv/Projects/soundboard/tests/web-audio.test.ts:50:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

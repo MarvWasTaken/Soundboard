@@ -81,3 +81,16 @@ test('native adapters wait for a positive duration even when the loaded flag arr
     if ('value' in result && result.value && 'stop' in result.value) result.value.stop();
   }
 });
+
+test('native position follows confirmed statuses, holds during buffering and ignores invalid or late values', async () => {
+  const h = harness();
+  const handle = await beginNativePlayback(h.player, { start: 1, end: 2.5 }, () => {}, new AbortController().signal, h.clock);
+  const read = () => (handle as { getPositionSeconds?: () => number }).getPositionSeconds?.();
+  assert.equal(read(), 1);
+  h.emit({ currentTime: 1.4 }); assert.equal(read(), 1.4);
+  h.emit({ currentTime: 1.8, isBuffering: true, playing: false }); assert.equal(read(), 1.4);
+  h.emit({ currentTime: NaN, isBuffering: false, playing: true }); assert.equal(read(), 1.4);
+  h.emit({ currentTime: Infinity }); assert.equal(read(), 1.4); assert.equal(h.counters().removed, 0, 'invalid status time must not falsely end playback');
+  h.emit({ currentTime: -4 }); assert.equal(read(), 1);
+  h.emit({ currentTime: 1.7 }); handle.stop(); h.emit({ currentTime: 2.1 }); assert.equal(read(), 1.7);
+});

@@ -8,7 +8,7 @@ class FakeSource {
 }
 class FakeContext extends EventTarget {
   static latest: FakeContext;
-  state = 'suspended'; destination = {}; sources: FakeSource[] = []; resumes = 0;
+  currentTime = 8; state = 'suspended'; destination = {}; sources: FakeSource[] = []; resumes = 0;
   constructor() { super(); FakeContext.latest = this; }
   resume() { this.resumes++; this.state = 'running'; return Promise.resolve(); }
   async decodeAudioData() { return { duration: 3 }; }
@@ -41,4 +41,15 @@ test('aborted web decode creates no playing source', async () => {
   const abort = new AbortController(); abort.abort();
   await assert.rejects(audio.begin(asset, { start: 0, end: 2 }, () => {}, abort.signal));
   assert.equal(FakeContext.latest.sources.length, 0);
+});
+
+test('web positions use absolute engine time, clamp, and freeze after cleanup', async () => {
+  const audio = new LocalAudio(); await audio.unlockFromGesture();
+  const handle = await audio.begin(asset, { start: 1, end: 2 }, () => {}, new AbortController().signal);
+  const read = () => (handle as { getPositionSeconds?: () => number }).getPositionSeconds?.();
+  assert.equal(read(), 1);
+  FakeContext.latest.currentTime = 8.25; assert.equal(read(), 1.25);
+  FakeContext.latest.currentTime = 20; assert.equal(read(), 2);
+  FakeContext.latest.currentTime = 8.5; handle.stop();
+  FakeContext.latest.currentTime = 30; assert.equal(read(), 1.5);
 });

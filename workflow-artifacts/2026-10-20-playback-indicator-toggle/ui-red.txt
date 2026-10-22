@@ -1,0 +1,19 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: playing preview must expose an absolute current position
+
+0 !== 1
+
+    at measuredPreview (file:///Users/marv/Projects/soundboard/scripts/playback-indicator-smoke.mjs:66:10)
+    at async file:///Users/marv/Projects/soundboard/scripts/playback-indicator-smoke.mjs:107:19 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.0
